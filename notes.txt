@@ -1,0 +1,9 @@
+Dataset 1:
+Delhi_NDVI_Samples_2025.csv
+
+Columns:
+system:index
+NDVI
+Latitude
+Longitude
+.geo
