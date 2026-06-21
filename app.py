@@ -5,6 +5,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 import plotly.express as px
+import gdown
 
 from streamlit_option_menu import option_menu
 from sklearn.model_selection import train_test_split
@@ -30,6 +31,14 @@ models = {
     "Mumbai": "models/mumbai_temperature_model.pkl",
     "Hyderabad": "models/hyderabad_temperature_model.pkl",
     "Bengaluru": "models/bengaluru_temperature_model.pkl"
+}
+
+# Replace these with your actual Google Drive FILE IDs
+model_drive_ids = {
+    "Delhi": "https://drive.google.com/file/d/12azeSQ_JnfhY8CGvFYF6G-qViGHq-KVM/view?usp=sharing",
+    "Mumbai": "https://drive.google.com/file/d/15kDG-y2af6wAtRaaDmjrFBzFp-q1oDft/view?usp=drive_link",
+    "Hyderabad": "https://drive.google.com/file/d/1FaymPjoahhIBG9wArpcrSWSy7pZA62po/view?usp=drive_link",
+    "Bengaluru": "https://drive.google.com/file/d/1P93X9wyBjlTEu2Gc-fM3y5kDBb54NHnf/view?usp=drive_link"
 }
 
 image_paths = {
@@ -111,6 +120,29 @@ known_places = {
         "Rajajinagar": (12.9915, 77.5545)
     }
 }
+
+
+def download_model_if_missing(city):
+    os.makedirs("models", exist_ok=True)
+
+    model_path = models[city]
+
+    if not os.path.exists(model_path):
+        file_id = model_drive_ids[city]
+
+        if file_id.startswith("PASTE_"):
+            st.error(
+                f"Google Drive file ID missing for {city} model. "
+                "Please update model_drive_ids in app.py."
+            )
+            st.stop()
+
+        url = f"https://drive.google.com/uc?id={file_id}"
+
+        with st.spinner(f"Downloading {city} model..."):
+            gdown.download(url, model_path, quiet=False)
+
+    return model_path
 
 
 def nearest_place(lat, lon, city):
@@ -369,7 +401,9 @@ with st.sidebar:
 
 
 df = pd.read_csv(datasets[city])
-model = joblib.load(models[city])
+
+model_path = download_model_if_missing(city)
+model = joblib.load(model_path)
 
 df = df.dropna().reset_index(drop=True)
 
