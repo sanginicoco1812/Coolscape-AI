@@ -36,9 +36,9 @@ models = {
 # Replace these with your actual Google Drive FILE IDs
 model_drive_ids = {
     "Delhi": "https://drive.google.com/file/d/12azeSQ_JnfhY8CGvFYF6G-qViGHq-KVM/view?usp=sharing",
-    "Mumbai": "https://drive.google.com/file/d/15kDG-y2af6wAtRaaDmjrFBzFp-q1oDft/view?usp=drive_link",
-    "Hyderabad": "https://drive.google.com/file/d/1FaymPjoahhIBG9wArpcrSWSy7pZA62po/view?usp=drive_link",
-    "Bengaluru": "https://drive.google.com/file/d/1P93X9wyBjlTEu2Gc-fM3y5kDBb54NHnf/view?usp=drive_link"
+    "Mumbai": "https://drive.google.com/file/d/15kDG-y2af6wAtRaaDmjrFBzFp-q1oDft/view?usp=sharing",
+    "Hyderabad": "https://drive.google.com/file/d/1FaymPjoahhIBG9wArpcrSWSy7pZA62po/view?usp=sharing",
+    "Bengaluru": "https://drive.google.com/file/d/1P93X9wyBjlTEu2Gc-fM3y5kDBb54NHnf/view?usp=sharing"
 }
 
 image_paths = {
