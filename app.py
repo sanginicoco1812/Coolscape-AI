@@ -337,6 +337,77 @@ hr {
     border-radius: 18px;
     overflow: hidden;
 }
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 768px) {
+
+    .block-container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        padding-top: 1rem !important;
+    }
+
+    .hero {
+        padding: 24px !important;
+        border-radius: 22px !important;
+    }
+
+    .hero h1 {
+        font-size: 32px !important;
+        line-height: 1.15 !important;
+    }
+
+    .hero p {
+        font-size: 14px !important;
+    }
+
+    .sidebar-title {
+        padding: 18px !important;
+    }
+
+    .sidebar-title h2 {
+        font-size: 21px !important;
+    }
+
+    .metric-card-hot,
+    .metric-card-cool,
+    .metric-card-neutral,
+    .section-card,
+    .recommendation-card {
+        padding: 18px !important;
+        border-radius: 18px !important;
+        margin-bottom: 14px !important;
+    }
+
+    .metric-card-hot h2,
+    .metric-card-cool h2,
+    .metric-card-neutral h2 {
+        font-size: 26px !important;
+    }
+
+    div[data-testid="stMetric"] {
+        padding: 14px !important;
+    }
+
+    div[data-testid="stDataFrame"] {
+        overflow-x: auto !important;
+    }
+
+    iframe {
+        min-height: 420px !important;
+    }
+
+    h1 {
+        font-size: 30px !important;
+    }
+
+    h2 {
+        font-size: 24px !important;
+    }
+
+    h3 {
+        font-size: 20px !important;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -488,7 +559,8 @@ if page == "Command Center":
 
     st.write("")
 
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2 = st.columns(2)
+    c3, c4 = st.columns(2)
 
     c1.markdown(f"""
     <div class="metric-card-hot">
@@ -567,7 +639,7 @@ elif page == "Heat Map":
         color="LST",
         color_continuous_scale="Hot",
         zoom=9,
-        height=730,
+        height=520,
         hover_name="Place",
         hover_data={
             "LST": ":.2f",
