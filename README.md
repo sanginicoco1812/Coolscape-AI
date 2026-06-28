@@ -1,53 +1,147 @@
-# CoolScape AI
+# HEATSHIELD INDIA
 
-AI-powered Urban Heat Intelligence and Climate Action Platform for Delhi NCR, Mumbai, Hyderabad, and Bengaluru.
+AI-powered urban heat decision-support dashboard for Indian cities, built for the ISRO/Bharatiya Antariksh Hackathon.
 
-## Features
+Live frontend: https://polite-lebkuchen-5eb8db.netlify.app
 
-* Urban Heat Hotspot Detection
-* Interactive Heat Maps
-* Cooling Recommendation Engine
-* AI-Powered Temperature Prediction
-* SHAP Explainability
-* Multi-City Climate Analytics Dashboard
+> Note: the Netlify site hosts the frontend. Temperature prediction needs the FastAPI backend running locally or deployed separately with `VITE_API_URL` pointed to that backend.
 
-## Model & Dataset Files
+## What It Does
 
-Due to GitHub file size limitations, the trained machine learning models and datasets are hosted separately.
+- Predicts urban heat risk for Delhi, Mumbai, Hyderabad, and Bengaluru.
+- Uses city-specific ML model selection for temperature prediction.
+- Calculates an Urban Cooling Index from vegetation, humidity, wind speed, building density, and predicted temperature.
+- Generates an AI confidence score for the prediction.
+- Explains heat risk through dynamic AI factors such as low NDVI, high building density, low wind speed, high humidity, and high predicted temperature.
+- Provides city-specific cooling recommendations.
+- Displays satellite-style city heatmaps with blue place markers, temperature labels, and zone categories.
+- Includes place search and a heat-threshold control to focus on hotter regions.
+- Presents the experience through a dark ISRO-inspired dashboard UI with space visuals, custom cursor effects, and responsive cards.
 
-Download all required assets from:
+## Supported Cities
 
-**Google Drive:**
-https://drive.google.com/drive/folders/1uE2BfjqqzcLGJDNmkpWJnpv3o4XWxRW4?usp=drive_link
-
-After downloading, place the folders in the project root directory:
-
-```text
-CoolScape-AI/
-├── app.py
-├── datasets/
-├── models/
-├── images/
-└── requirements.txt
-```
-
-## Installation
-
-```bash
-pip install -r requirements.txt
-streamlit run app.py
-```
+- Delhi
+- Mumbai
+- Hyderabad
+- Bengaluru
 
 ## Tech Stack
 
-* Python
-* Streamlit
-* Scikit-Learn
-* Plotly
-* Google Earth Engine
-* SHAP
-* Satellite Remote Sensing
+- Frontend: React, Vite, CSS
+- Backend: FastAPI, Python
+- ML: scikit-learn/joblib city models
+- Maps: Plotly heatmaps with satellite basemap
+- Deployment: Netlify for the frontend
 
-## Project Vision
+## Project Structure
 
-CoolScape AI leverages satellite-derived environmental indicators, machine learning, and explainable AI to identify urban heat hotspots and recommend climate-resilient cooling interventions. The platform helps planners, researchers, and policymakers make data-driven decisions for sustainable and climate-resilient cities.
+```text
+Coolscape-AI/
+├── backend/
+│   ├── main.py
+│   └── requirements.txt
+├── heatshield-frontend/
+│   ├── public/heatmaps/
+│   ├── src/App.jsx
+│   ├── src/index.css
+│   └── package.json
+├── city_heatmap.py
+├── models/
+├── datasets/
+└── README.md
+```
+
+## Run Locally
+
+### Backend
+
+```bash
+cd backend
+uvicorn main:app --reload
+```
+
+If you are using the project virtual environment:
+
+```bash
+cd backend
+../venv/bin/python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
+```
+
+### Frontend
+
+```bash
+cd heatshield-frontend
+npm install
+npm run dev
+```
+
+Open the local app at:
+
+```text
+http://localhost:5173/
+```
+
+## Prediction API
+
+Endpoint:
+
+```text
+POST /predict
+```
+
+Example request:
+
+```bash
+curl -X POST http://127.0.0.1:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "city": "Delhi",
+    "ndvi": 0.18,
+    "humidity": 72,
+    "windSpeed": 6,
+    "buildingDensity": 82
+  }'
+```
+
+Expected response fields:
+
+- `temperature`
+- `city`
+- `risk`
+- `coolingIndex`
+- `confidence`
+- `factors`
+- `recommendations`
+- `status`
+
+## Regenerate Heatmaps
+
+```bash
+python3 city_heatmap.py
+```
+
+This refreshes the city-wise HTML maps used by the frontend in `heatshield-frontend/public/heatmaps/`.
+
+## Deployment
+
+Frontend deployment:
+
+```bash
+cd heatshield-frontend
+npm run build
+npx netlify deploy --prod --dir dist
+```
+
+For public prediction support, deploy the backend separately and configure the frontend environment variable:
+
+```text
+VITE_API_URL=https://your-backend-url
+```
+
+## Data Note
+
+The current dashboard is not fully real-time. It uses project datasets, generated city heatmaps, trained models, and user-provided environmental inputs. It is designed so live satellite, weather, and municipal sensor feeds can be connected later.
+
+## Team
+
+Powered by Team 404 Brain Not Found.
