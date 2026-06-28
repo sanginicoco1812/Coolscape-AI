@@ -11,6 +11,7 @@ function App() {
   const [recommendations, setRecommendations] = useState([]);
   const [coolingIndex, setCoolingIndex] = useState(null);
   const [confidence, setConfidence] = useState(null);
+  const [predictionMode, setPredictionMode] = useState("");
   const [placeSearch, setPlaceSearch] = useState("");
   const [heatThreshold, setHeatThreshold] = useState(40);
   const [isScanning, setIsScanning] = useState(false); // Add this line
@@ -248,11 +249,70 @@ function App() {
     : activeTemperature >= 35
     ? "#f97316"
     : "#22c55e";
+
+    const cityRecommendations = {
+      Delhi: ["Expand tree cover in heat-stressed corridors", "Deploy cool roofs on dense built-up blocks", "Use reflective pavements near high-footfall zones"],
+      Mumbai: ["Protect coastal ventilation corridors", "Build shaded walkways around transit zones", "Use humidity-sensitive planning for dense neighborhoods"],
+      Hyderabad: ["Restore lake-edge cooling buffers", "Connect green corridors across hot zones", "Scale cool roofs in IT and residential clusters"],
+      Bengaluru: ["Protect mature tree canopy", "Create green IT corridors", "Preserve ventilation corridors across dense growth areas"],
+    };
+
+    const getRiskLevel = (value) => {
+      if (value >= 45) return "Extreme";
+      if (value >= 40) return "High";
+      if (value >= 35) return "Moderate";
+      return "Low";
+    };
+
+    const buildFallbackPrediction = () => {
+      const ndviValue = clamp(Number(ndvi) || activeLandsatStats.avgNdvi, 0, 1);
+      const humidityValue = clamp(Number(humidity) || 62, 0, 100);
+      const windValue = clamp(Number(windSpeed) || 8, 0, 40);
+      const densityValue = clamp(Number(buildingDensity) || 70, 0, 100);
+      const baseTemp = activeLandsatStats.avgLst;
+      const predicted = clamp(
+        baseTemp + densityValue * 0.045 + humidityValue * 0.018 - windValue * 0.08 - ndviValue * 4.2,
+        28,
+        52
+      );
+      const fallbackCoolingIndex = Math.round(
+        clamp(
+          ndviValue * 42 + windValue * 1.3 + (100 - densityValue) * 0.28 + (100 - humidityValue) * 0.12 + (52 - predicted) * 1.15,
+          0,
+          100
+        )
+      );
+      const fallbackFactors = [];
+
+      if (ndviValue < 0.25) fallbackFactors.push("Low NDVI indicates limited vegetation cooling capacity.");
+      if (densityValue > 70) fallbackFactors.push("High building density can trap heat and reduce surface cooling.");
+      if (windValue < 8) fallbackFactors.push("Low wind speed weakens natural ventilation.");
+      if (humidityValue > 70) fallbackFactors.push("High humidity can increase perceived heat stress.");
+      if (predicted >= 40) fallbackFactors.push("High predicted surface temperature indicates a priority heat-risk zone.");
+      if (fallbackFactors.length === 0) fallbackFactors.push("Inputs show a comparatively balanced thermal profile for this city.");
+
+      return {
+        temperature: predicted.toFixed(1),
+        risk: getRiskLevel(predicted),
+        coolingIndex: fallbackCoolingIndex,
+        confidence: 82,
+        factors: fallbackFactors,
+        recommendations: cityRecommendations[city] || cityRecommendations.Delhi,
+      };
+    };
+
     async function handlePrediction() {
       setIsScanning(true);
     
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+      const configuredApiUrl = import.meta.env.VITE_API_URL;
+      const isLocalFrontend = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+
+      if (!configuredApiUrl && !isLocalFrontend) {
+        throw new Error("Public frontend is running without a hosted backend API.");
+      }
+
+      const apiBaseUrl = configuredApiUrl || "http://127.0.0.1:8000";
       const response = await fetch(`${apiBaseUrl}/predict`, {
         method: "POST",
         headers: {
@@ -281,9 +341,17 @@ function App() {
     setRecommendations(data.recommendations || []);
     setCoolingIndex(data.coolingIndex ?? null);
     setConfidence(data.confidence ?? null);
+    setPredictionMode("api");
    } catch (error) {
     console.error("Prediction failed:", error);
-    alert("Backend connection failed. Please check the API link.");
+    const fallback = buildFallbackPrediction();
+    setTemperature(fallback.temperature);
+    setRiskLevel(fallback.risk);
+    setAiFactors(fallback.factors);
+    setRecommendations(fallback.recommendations);
+    setCoolingIndex(fallback.coolingIndex);
+    setConfidence(fallback.confidence);
+    setPredictionMode("demo");
    } finally {
     setIsScanning(false);
    }
@@ -894,6 +962,27 @@ className="dock-hover"
             >
               SYSTEM STATE STATS: {riskLevel} RISK CORRIDOR
             </div>
+
+            {predictionMode && (
+              <div
+                style={{
+                  margin: "0 auto 20px",
+                  width: "fit-content",
+                  color: predictionMode === "api" ? "#86efac" : "#bae6fd",
+                  backgroundColor: predictionMode === "api" ? "rgba(34,197,94,0.1)" : "rgba(14,165,233,0.1)",
+                  border: predictionMode === "api" ? "1px solid rgba(34,197,94,0.24)" : "1px solid rgba(14,165,233,0.24)",
+                  borderRadius: "999px",
+                  padding: "7px 11px",
+                  fontSize: "11px",
+                  fontWeight: "800",
+                  letterSpacing: "0.45px",
+                }}
+              >
+                {predictionMode === "api"
+                  ? "Live backend API response"
+                  : "Public demo mode: backend API not connected on Netlify"}
+              </div>
+            )}
 
             <div
               style={{
