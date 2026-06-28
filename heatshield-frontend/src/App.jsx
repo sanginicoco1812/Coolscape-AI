@@ -14,6 +14,7 @@ function App() {
   const [placeSearch, setPlaceSearch] = useState("");
   const [heatThreshold, setHeatThreshold] = useState(40);
   const [isScanning, setIsScanning] = useState(false); // Add this line
+  const [showBreakingNews, setShowBreakingNews] = useState(true);
 
   useEffect(() => {
     if (!window.matchMedia("(pointer: fine)").matches) return undefined;
@@ -171,6 +172,33 @@ function App() {
 	      : coolingIndex >= 45
 	      ? "#f97316"
 	      : "#ef4444";
+	  const landsatCityStats = {
+	    Delhi: { samples: 1200, avgNdvi: 0.276, avgLst: 41.21, maxLst: 51.37 },
+	    Mumbai: { samples: 1200, avgNdvi: 0.181, avgLst: 37.48, maxLst: 52.24 },
+	    Hyderabad: { samples: 1200, avgNdvi: 0.363, avgLst: 41.13, maxLst: 49.87 },
+	    Bengaluru: { samples: 1200, avgNdvi: 0.408, avgLst: 37.67, maxLst: 45.1 },
+	  };
+	  const activeLandsatStats = landsatCityStats[city];
+	  const satelliteDataCards = [
+	    {
+	      label: "Satellite Source",
+	      value: "Landsat 8/9",
+	      detail: "Collection 2 Level 2",
+	      color: "#38bdf8",
+	    },
+	    {
+	      label: "Data Window",
+	      value: "Apr-Jun 2025",
+	      detail: "NDVI + LST composite",
+	      color: "#86efac",
+	    },
+	    {
+	      label: "Pipeline Status",
+	      value: "CSV Exported",
+	      detail: "Local dataset available",
+	      color: "#fdba74",
+	    },
+	  ];
 	  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
   const hasInputData =
   ndvi !== "" || humidity !== "" || windSpeed !== "" || buildingDensity !== "";
@@ -274,6 +302,32 @@ function App() {
     }}
   >
     {isScanning && <div className="scanning-overlay"></div>}
+    {showBreakingNews && (
+      <div className="breaking-news-overlay" role="dialog" aria-modal="true" aria-label="Breaking news">
+        <div className="breaking-news-card">
+          <div className="breaking-news-kicker">
+            <span className="breaking-news-pulse"></span>
+            Breaking News
+          </div>
+          <h2>ISRO Hackathon Mission Console Activated</h2>
+          <p>
+            HEATSHIELD INDIA is now visualizing Landsat 8/9 April-June 2025 satellite samples for urban heat intelligence across Indian cities.
+          </p>
+          <div className="breaking-news-meta">
+            <span>Earth Observation Layer Online</span>
+            <span>NDVI + LST Exported</span>
+            <span>Team 404 Brain Not Found</span>
+          </div>
+          <button
+            className="dock-hover"
+            type="button"
+            onClick={() => setShowBreakingNews(false)}
+          >
+            Enter Dashboard
+          </button>
+        </div>
+      </div>
+    )}
     <div className="cursor-dot"></div>
     <div className="cursor-outline"></div>
     <div className="thermal-backdrop" aria-hidden="true"></div>
@@ -304,6 +358,20 @@ function App() {
     </aside>
 
     {/* ================= PAGE BACKGROUND WRAPPER ================= ^ */}
+
+    <div className="top-marquee-band" aria-label="HeatShield India mission updates">
+      <div className="top-marquee-track">
+        {[...Array(2)].map((_, loopIndex) => (
+          <div className="top-marquee-content" key={loopIndex} aria-hidden={loopIndex === 1}>
+            <span>ISRO Hackathon 2026</span>
+            <strong>HEATSHIELD INDIA mission console is live</strong>
+            <span>Landsat 8/9 Apr-Jun 2025 NDVI + LST exported</span>
+            <strong>Urban cooling intelligence for Delhi, Mumbai, Hyderabad, Bengaluru</strong>
+            <span>Team 404 Brain Not Found</span>
+          </div>
+        ))}
+      </div>
+    </div>
 
     {/* ================= NAVBAR SECTION ================= */}
   <nav
@@ -422,6 +490,10 @@ className="dock-hover"
 >
   
   <div>
+    <div className="home-news-headline">
+      <span>ISRO Hackathon 2026</span>
+      <strong>Satellite-powered urban heat risk dashboard for climate-resilient Indian cities</strong>
+    </div>
     <p
   style={{
     color: "#f97316",
@@ -1052,6 +1124,175 @@ className="dock-hover"
     </div>
   </div>
 </div>
+
+{/* ================= SATELLITE DATA SOURCE SECTION ================= */}
+
+<section
+  className="card-hover animate-card"
+  style={{
+    maxWidth: "1200px",
+    margin: "40px auto 0",
+    padding: "34px",
+    borderRadius: "22px",
+    background:
+      "linear-gradient(135deg, rgba(14,165,233,0.13), rgba(15,23,42,0.74) 44%, rgba(249,115,22,0.1))",
+    border: "1px solid rgba(125, 211, 252, 0.16)",
+    boxShadow: "0 22px 58px rgba(0, 0, 0, 0.32)",
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      gap: "20px",
+      flexWrap: "wrap",
+      marginBottom: "24px",
+    }}
+  >
+    <div>
+      <p
+        style={{
+          margin: "0 0 10px",
+          color: "#38bdf8",
+          fontSize: "11px",
+          fontWeight: "800",
+          letterSpacing: "1.4px",
+          textTransform: "uppercase",
+          fontFamily: "'Orbitron', sans-serif",
+        }}
+      >
+        Earth Observation Data Layer
+      </p>
+      <h2
+        style={{
+          margin: 0,
+          color: "#f8fafc",
+          fontSize: "22px",
+          fontFamily: "'Orbitron', sans-serif",
+          letterSpacing: "0.8px",
+        }}
+      >
+        Landsat April-June 2025 Integration
+      </h2>
+    </div>
+
+    <span
+      style={{
+        color: "#bbf7d0",
+        backgroundColor: "rgba(34,197,94,0.12)",
+        border: "1px solid rgba(34,197,94,0.28)",
+        borderRadius: "999px",
+        padding: "9px 13px",
+        fontSize: "11px",
+        fontWeight: "900",
+        textTransform: "uppercase",
+        letterSpacing: "0.7px",
+      }}
+    >
+      Exported Dataset
+    </span>
+  </div>
+
+  <p
+    style={{
+      margin: "0 0 22px",
+      maxWidth: "780px",
+      color: "#cbd5e1",
+      fontSize: "14px",
+      lineHeight: "1.7",
+    }}
+  >
+    HEATSHIELD INDIA now includes exported Google Earth Engine samples for Landsat-derived NDVI and land surface temperature. The current {city} summary below is calculated from the April-June 2025 CSV dataset downloaded into the project.
+  </p>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+      gap: "14px",
+    }}
+  >
+    {satelliteDataCards.map((card) => (
+      <article
+        key={card.label}
+        style={{
+          padding: "18px",
+          borderRadius: "16px",
+          backgroundColor: "rgba(2,6,23,0.48)",
+          border: `1px solid ${card.color}33`,
+          boxShadow: `0 0 26px ${card.color}14`,
+        }}
+      >
+        <div
+          style={{
+            color: "#94a3b8",
+            fontSize: "11px",
+            fontWeight: "900",
+            letterSpacing: "0.8px",
+            textTransform: "uppercase",
+            marginBottom: "10px",
+          }}
+        >
+          {card.label}
+        </div>
+        <strong
+          style={{
+            display: "block",
+            color: card.color,
+            fontSize: "22px",
+            fontWeight: "900",
+            marginBottom: "8px",
+          }}
+        >
+          {card.value}
+        </strong>
+        <span style={{ color: "#94a3b8", fontSize: "13px", lineHeight: "1.5" }}>
+          {card.detail}
+        </span>
+      </article>
+    ))}
+  </div>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+      gap: "14px",
+      marginTop: "18px",
+      paddingTop: "18px",
+      borderTop: "1px solid rgba(255,255,255,0.1)",
+    }}
+  >
+    <article style={{ padding: "16px", borderRadius: "14px", backgroundColor: "rgba(15,23,42,0.58)", border: "1px solid rgba(255,255,255,0.08)" }}>
+      <div style={{ color: "#94a3b8", fontSize: "11px", fontWeight: "900", letterSpacing: "0.8px", textTransform: "uppercase", marginBottom: "8px" }}>
+        {city} Samples
+      </div>
+      <strong style={{ color: "#f8fafc", fontSize: "26px" }}>{activeLandsatStats.samples}</strong>
+    </article>
+
+    <article style={{ padding: "16px", borderRadius: "14px", backgroundColor: "rgba(15,23,42,0.58)", border: "1px solid rgba(34,197,94,0.16)" }}>
+      <div style={{ color: "#94a3b8", fontSize: "11px", fontWeight: "900", letterSpacing: "0.8px", textTransform: "uppercase", marginBottom: "8px" }}>
+        Average NDVI
+      </div>
+      <strong style={{ color: "#86efac", fontSize: "26px" }}>{activeLandsatStats.avgNdvi.toFixed(3)}</strong>
+    </article>
+
+    <article style={{ padding: "16px", borderRadius: "14px", backgroundColor: "rgba(15,23,42,0.58)", border: "1px solid rgba(249,115,22,0.18)" }}>
+      <div style={{ color: "#94a3b8", fontSize: "11px", fontWeight: "900", letterSpacing: "0.8px", textTransform: "uppercase", marginBottom: "8px" }}>
+        Average LST
+      </div>
+      <strong style={{ color: "#fdba74", fontSize: "26px" }}>{activeLandsatStats.avgLst.toFixed(2)}°C</strong>
+    </article>
+
+    <article style={{ padding: "16px", borderRadius: "14px", backgroundColor: "rgba(15,23,42,0.58)", border: "1px solid rgba(239,68,68,0.18)" }}>
+      <div style={{ color: "#94a3b8", fontSize: "11px", fontWeight: "900", letterSpacing: "0.8px", textTransform: "uppercase", marginBottom: "8px" }}>
+        Max LST
+      </div>
+      <strong style={{ color: "#fca5a5", fontSize: "26px" }}>{activeLandsatStats.maxLst.toFixed(2)}°C</strong>
+    </article>
+  </div>
+</section>
 
 {/* ================= HEATMAP / RADIATIVE SPECTRUM SECTION ================= */}
 

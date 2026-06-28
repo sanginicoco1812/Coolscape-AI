@@ -16,9 +16,10 @@ html {
 
 body {
   background:
-    radial-gradient(circle at 18% 8%, rgba(251, 146, 60, 0.2), transparent 28%),
-    radial-gradient(circle at 82% 10%, rgba(56, 189, 248, 0.16), transparent 30%),
-    radial-gradient(ellipse at 50% 112%, rgba(34, 197, 94, 0.22), transparent 42%),
+    radial-gradient(circle at 17% 12%, rgba(249, 115, 22, 0.18), transparent 26%),
+    radial-gradient(circle at 78% 8%, rgba(56, 189, 248, 0.15), transparent 29%),
+    radial-gradient(ellipse at 50% 106%, rgba(34, 197, 94, 0.2), transparent 43%),
+    linear-gradient(180deg, #020617 0%, #030712 56%, #020617 100%),
     #020617;
   overflow-x: hidden;
 }
@@ -141,10 +142,10 @@ input {
   isolation: isolate;
   overflow: hidden;
   background:
-    radial-gradient(circle at 12% 14%, rgba(251, 146, 60, 0.2), transparent 24%),
-    radial-gradient(circle at 86% 16%, rgba(59, 130, 246, 0.18), transparent 28%),
-    radial-gradient(circle at 72% 62%, rgba(34, 197, 94, 0.09), transparent 30%),
-    linear-gradient(180deg, rgba(2, 6, 23, 0.82) 0%, rgba(3, 7, 18, 0.94) 44%, rgba(2, 6, 23, 1) 100%),
+    radial-gradient(circle at 12% 11%, rgba(251, 146, 60, 0.15), transparent 22%),
+    radial-gradient(circle at 88% 13%, rgba(14, 165, 233, 0.14), transparent 26%),
+    radial-gradient(ellipse at 50% 55%, rgba(30, 64, 175, 0.14), transparent 44%),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.74) 0%, rgba(3, 7, 18, 0.92) 46%, rgba(2, 6, 23, 1) 100%),
     #020617;
 }
 
@@ -155,14 +156,14 @@ input {
   z-index: -3;
   pointer-events: none;
   background-image:
-    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.8) 0 1px, transparent 1.6px),
-    radial-gradient(circle at 76% 28%, rgba(255, 255, 255, 0.72) 0 1px, transparent 1.8px),
-    radial-gradient(circle at 34% 76%, rgba(186, 230, 253, 0.7) 0 1px, transparent 1.7px),
-    radial-gradient(circle at 88% 70%, rgba(255, 237, 213, 0.75) 0 1px, transparent 1.8px),
-    linear-gradient(rgba(148, 163, 184, 0.032) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.032) 1px, transparent 1px);
-  background-size: 180px 180px, 240px 240px, 210px 210px, 260px 260px, 64px 64px, 64px 64px;
+    radial-gradient(circle at 16% 22%, rgba(255, 255, 255, 0.76) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 72% 30%, rgba(191, 219, 254, 0.68) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 36% 74%, rgba(255, 237, 213, 0.66) 0 1px, transparent 1.7px),
+    linear-gradient(rgba(125, 211, 252, 0.026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125, 211, 252, 0.024) 1px, transparent 1px);
+  background-size: 190px 190px, 270px 270px, 230px 230px, 86px 86px, 86px 86px;
   mask-image: linear-gradient(to bottom, black 0%, black 74%, transparent 100%);
+  opacity: 0.76;
 }
 
 .app-shell::after {
@@ -172,12 +173,13 @@ input {
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 50% 112%, rgba(14, 165, 233, 0.28), transparent 24%),
-    radial-gradient(ellipse at 50% 118%, rgba(34, 197, 94, 0.18), transparent 34%),
-    linear-gradient(110deg, transparent 0 46%, rgba(125, 211, 252, 0.05) 46.2%, transparent 47%),
-    linear-gradient(250deg, transparent 0 58%, rgba(251, 146, 60, 0.06) 58.2%, transparent 59%),
-    linear-gradient(180deg, transparent 0%, rgba(2, 6, 23, 0.68) 78%);
-  opacity: 0.9;
+    radial-gradient(ellipse at 50% 106%, rgba(14, 165, 233, 0.24), transparent 24%),
+    radial-gradient(ellipse at 50% 115%, rgba(34, 197, 94, 0.16), transparent 35%),
+    linear-gradient(112deg, transparent 0 43%, rgba(125, 211, 252, 0.055) 43.2%, transparent 44.2%),
+    linear-gradient(247deg, transparent 0 60%, rgba(251, 146, 60, 0.05) 60.2%, transparent 61.3%),
+    radial-gradient(ellipse at 50% 35%, transparent 0 38%, rgba(125, 211, 252, 0.035) 38.2% 38.5%, transparent 39%),
+    linear-gradient(180deg, transparent 0%, rgba(2, 6, 23, 0.7) 82%);
+  opacity: 0.92;
 }
 
 .thermal-backdrop {
@@ -186,10 +188,11 @@ input {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 18% 26%, rgba(251, 146, 60, 0.13), transparent 16%),
-    radial-gradient(circle at 82% 22%, rgba(125, 211, 252, 0.12), transparent 18%),
-    radial-gradient(circle at 58% 74%, rgba(34, 197, 94, 0.08), transparent 24%),
-    radial-gradient(ellipse at 50% 108%, rgba(8, 47, 73, 0.24), rgba(2, 6, 23, 0.84) 68%);
+    radial-gradient(circle at 18% 24%, rgba(251, 146, 60, 0.11), transparent 17%),
+    radial-gradient(circle at 82% 23%, rgba(125, 211, 252, 0.11), transparent 19%),
+    radial-gradient(circle at 62% 72%, rgba(34, 197, 94, 0.075), transparent 25%),
+    conic-gradient(from 210deg at 50% 112%, transparent 0 18deg, rgba(14, 165, 233, 0.11) 25deg, transparent 42deg, rgba(249, 115, 22, 0.075) 54deg, transparent 72deg),
+    radial-gradient(ellipse at 50% 108%, rgba(8, 47, 73, 0.2), rgba(2, 6, 23, 0.82) 68%);
 }
 
 .thermal-backdrop::before {
@@ -205,9 +208,9 @@ input {
   border-left: 1px solid rgba(125, 211, 252, 0.05);
   border-right: 1px solid rgba(125, 211, 252, 0.05);
   box-shadow:
-    0 -34px 90px rgba(14, 165, 233, 0.16),
-    0 -8px 30px rgba(34, 197, 94, 0.14),
-    inset 0 22px 80px rgba(2, 132, 199, 0.12);
+    0 -38px 110px rgba(14, 165, 233, 0.14),
+    0 -10px 34px rgba(34, 197, 94, 0.12),
+    inset 0 24px 90px rgba(2, 132, 199, 0.1);
 }
 
 .thermal-backdrop::after {
@@ -221,10 +224,12 @@ input {
   border-radius: 50%;
   border: 1px solid rgba(125, 211, 252, 0.075);
   box-shadow:
-    0 0 0 90px rgba(125, 211, 252, 0.018),
-    0 0 0 180px rgba(251, 146, 60, 0.012),
-    inset 0 0 120px rgba(15, 23, 42, 0.28);
+    0 0 0 82px rgba(125, 211, 252, 0.016),
+    0 0 0 166px rgba(251, 146, 60, 0.011),
+    0 0 0 250px rgba(34, 197, 94, 0.006),
+    inset 0 0 130px rgba(15, 23, 42, 0.3);
   opacity: 0.85;
+  animation: orbitalDrift 18s ease-in-out infinite alternate;
 }
 
 .app-shell nav {
@@ -247,6 +252,220 @@ input {
   box-shadow:
     0 14px 32px rgba(249, 115, 22, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+}
+
+.top-marquee-band {
+  max-width: 1200px;
+  margin: 0 auto 18px;
+  overflow: hidden;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(249, 115, 22, 0.18), rgba(14, 165, 233, 0.12), rgba(34, 197, 94, 0.1));
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.26),
+    0 0 30px rgba(249, 115, 22, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.top-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: topMarqueeMove 26s linear infinite;
+}
+
+.top-marquee-band:hover .top-marquee-track {
+  animation-play-state: paused;
+}
+
+.top-marquee-content {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-shrink: 0;
+  padding: 10px 18px;
+  color: #cbd5e1;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.top-marquee-content span {
+  color: #fdba74;
+  font-family: "Orbitron", sans-serif;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+}
+
+.top-marquee-content strong {
+  color: #e0f2fe;
+  font-weight: 900;
+}
+
+.top-marquee-content span::before,
+.top-marquee-content strong::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 10px;
+  border-radius: 999px;
+  background: #38bdf8;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.8);
+  vertical-align: 1px;
+}
+
+.breaking-news-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% 36%, rgba(249, 115, 22, 0.24), transparent 26%),
+    radial-gradient(circle at 62% 62%, rgba(56, 189, 248, 0.16), transparent 28%),
+    rgba(2, 6, 23, 0.86);
+  backdrop-filter: blur(18px);
+  animation: newsOverlayIn 0.32s ease-out both;
+}
+
+.breaking-news-card {
+  width: min(720px, 100%);
+  position: relative;
+  overflow: hidden;
+  padding: clamp(28px, 5vw, 46px);
+  border-radius: 26px;
+  background:
+    linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.92)),
+    #020617;
+  border: 1px solid rgba(251, 146, 60, 0.28);
+  box-shadow:
+    0 34px 90px rgba(0, 0, 0, 0.56),
+    0 0 70px rgba(249, 115, 22, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  text-align: left;
+}
+
+.breaking-news-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent),
+    radial-gradient(circle at 90% 10%, rgba(56, 189, 248, 0.16), transparent 22%);
+  transform: translateX(-100%);
+  animation: newsSweep 2.8s ease-in-out infinite;
+}
+
+.breaking-news-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 18px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: #fed7aa;
+  background: rgba(249, 115, 22, 0.12);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  font-family: "Orbitron", sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+
+.breaking-news-pulse {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #ef4444;
+  box-shadow: 0 0 0 7px rgba(239, 68, 68, 0.18), 0 0 18px rgba(239, 68, 68, 0.9);
+  animation: breakingPulse 1.25s ease-in-out infinite;
+}
+
+.breaking-news-card h2 {
+  margin: 0;
+  max-width: 620px;
+  color: #f8fafc;
+  font-family: "Orbitron", sans-serif;
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: 1.12;
+}
+
+.breaking-news-card p {
+  max-width: 620px;
+  margin: 18px 0 22px;
+  color: #cbd5e1;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.breaking-news-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.breaking-news-meta span {
+  padding: 8px 10px;
+  border-radius: 999px;
+  color: #bae6fd;
+  background: rgba(14, 165, 233, 0.11);
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.breaking-news-card button {
+  position: relative;
+  z-index: 1;
+  padding: 13px 18px !important;
+  border: 0 !important;
+  color: white !important;
+  background: linear-gradient(135deg, #fb923c, #f97316 48%, #ef4444) !important;
+  font-family: "Orbitron", sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.home-news-headline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 18px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(249, 115, 22, 0.16), rgba(14, 165, 233, 0.1));
+  border: 1px solid rgba(249, 115, 22, 0.22);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
+}
+
+.home-news-headline span {
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: #020617;
+  background: #fdba74;
+  font-family: "Orbitron", sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+}
+
+.home-news-headline strong {
+  color: #e0f2fe;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .card-hover {
@@ -522,6 +741,57 @@ input {
   }
 }
 
+@keyframes topMarqueeMove {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes orbitalDrift {
+  from {
+    transform: translate(-50%, -50%) rotate(-20deg) scale(0.98);
+    opacity: 0.72;
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(-12deg) scale(1.04);
+    opacity: 0.9;
+  }
+}
+
+@keyframes newsOverlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes newsSweep {
+  0%,
+  54% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes breakingPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.72);
+    opacity: 0.72;
+  }
+}
+
 .app-shell input,
 .app-shell select {
   border-radius: 12px !important;
@@ -576,6 +846,17 @@ input {
 
   .metric-grid {
     grid-template-columns: 1fr;
+  }
+
+  .top-marquee-band {
+    margin-bottom: 14px;
+    border-radius: 16px;
+  }
+
+  .top-marquee-content {
+    gap: 14px;
+    padding: 9px 14px;
+    font-size: 11px;
   }
 
   .side-quick-nav {

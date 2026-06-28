@@ -122,6 +122,36 @@ python3 city_heatmap.py
 
 This refreshes the city-wise HTML maps used by the frontend in `heatshield-frontend/public/heatmaps/`.
 
+## Landsat April-June 2025 Dataset
+
+The project includes an Earth Engine export script for Landsat 8/9 Collection 2 Level 2 data from April 1, 2025 through June 30, 2025.
+
+The script exports:
+
+- NDVI from Landsat red and near-infrared surface reflectance bands
+- Land Surface Temperature in Celsius from the Landsat thermal band
+- Latitude/longitude point samples for Delhi, Mumbai, Hyderabad, and Bengaluru
+
+Authenticate Google Earth Engine once:
+
+```bash
+earthengine authenticate
+```
+
+Run the exporter:
+
+```bash
+python3 landsat_apr_jun_2025_export.py
+```
+
+The CSV exports are created in this Google Drive folder:
+
+```text
+heatshield_landsat_apr_jun_2025
+```
+
+After the Earth Engine export tasks finish, download the CSV files into `datasets/`. Those files can then be used to rebuild master datasets, retrain city models, or regenerate city heatmaps.
+
 ## Deployment
 
 Frontend deployment:
