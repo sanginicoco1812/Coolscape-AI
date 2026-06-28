@@ -1,0 +1,72 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  background: #111827;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+@keyframes floatHero {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseHotspot {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0.22),
+      0 0 28px rgba(239, 68, 68, 0.9);
+  }
+  50% {
+    transform: scale(1.25);
+    box-shadow: 0 0 0 14px rgba(239, 68, 68, 0.12),
+      0 0 38px rgba(239, 68, 68, 1);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0.22),
+      0 0 28px rgba(239, 68, 68, 0.9);
+  }
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.float-hero {
+  animation: floatHero 5s ease-in-out infinite;
+}
+
+.fade-up {
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.hotspot-pulse {
+  animation: pulseHotspot 1.8s ease-in-out infinite;
+}

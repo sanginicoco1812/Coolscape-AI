@@ -1,0 +1,1378 @@
+import { useState } from "react";
+function App() {
+  const [ndvi, setNdvi] = useState("");
+  const [humidity, setHumidity] = useState("");
+  const [windSpeed, setWindSpeed] = useState("");
+  const [buildingDensity, setBuildingDensity] = useState("");
+  const [city, setCity] = useState("Delhi");
+  const [temperature, setTemperature] = useState(null);
+  const [riskLevel, setRiskLevel] = useState("");
+  const [aiFactors, setAiFactors] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
+  const [coolingIndex, setCoolingIndex] = useState(null);
+  const [confidence, setConfidence] = useState(null);
+  const [placeSearch, setPlaceSearch] = useState("");
+  const [isScanning, setIsScanning] = useState(false); // Add this line
+  const heatmapFiles = {
+    Delhi: {
+      type: "html",
+      src: "/heatmaps/delhi_heatmap.html",
+    },
+    Mumbai: {
+      type: "html",
+      src: "/heatmaps/mumbai_heatmap.html",
+    },
+    Hyderabad: {
+      type: "html",
+      src: "/heatmaps/hyderabad_heatmap.html",
+    },
+    Bengaluru: {
+      type: "html",
+      src: "/heatmaps/bengaluru_heatmap.html",
+    },
+  };
+	  const placeHeatIndex = {
+    Delhi: [
+      { name: "Dwarka", risk: "High", temperature: 40.8, focus: "Cool roofs and shaded transit edges" },
+      { name: "Rohini", risk: "Very High", temperature: 42.4, focus: "Tree-cover expansion and reflective pavements" },
+      { name: "Saket", risk: "Moderate", temperature: 37.6, focus: "Pocket parks and pedestrian shade" },
+      { name: "Noida", risk: "High", temperature: 41.2, focus: "Green buffers around dense commercial corridors" },
+      { name: "Gurugram", risk: "Very High", temperature: 42.8, focus: "Cool roofs and urban ventilation corridors" },
+      { name: "Faridabad", risk: "High", temperature: 40.9, focus: "Industrial shade and surface cooling" },
+      { name: "Ghaziabad", risk: "Very High", temperature: 42.1, focus: "Reflective pavements and roadside canopy" },
+      { name: "Central Delhi", risk: "High", temperature: 40.4, focus: "Tree canopy protection near civic zones" },
+      { name: "Okhla", risk: "Very High", temperature: 42.6, focus: "Industrial cool roofing and heat-safe work zones" },
+      { name: "Bahadurgarh", risk: "High", temperature: 40.2, focus: "Green buffers along built-up edges" },
+    ],
+    Mumbai: [
+      { name: "South Mumbai", risk: "Moderate", temperature: 36.5, focus: "Coastal ventilation and shaded walkways" },
+      { name: "Bandra", risk: "High", temperature: 38.8, focus: "Humidity-sensitive shade and street trees" },
+      { name: "Andheri", risk: "Very High", temperature: 40.7, focus: "Cool roofs around dense transit corridors" },
+      { name: "Borivali", risk: "Moderate", temperature: 36.9, focus: "Canopy continuity near residential edges" },
+      { name: "Thane", risk: "High", temperature: 39.4, focus: "Lake-edge cooling and open-space protection" },
+      { name: "Navi Mumbai", risk: "High", temperature: 38.9, focus: "Ventilation corridors and shaded public routes" },
+      { name: "Chembur", risk: "Very High", temperature: 40.5, focus: "Industrial heat mitigation and reflective surfaces" },
+      { name: "Powai", risk: "Moderate", temperature: 37.2, focus: "Lake cooling protection and green buffers" },
+      { name: "Malad", risk: "High", temperature: 38.6, focus: "Pedestrian shade and humidity-aware planning" },
+      { name: "Worli", risk: "Moderate", temperature: 36.7, focus: "Coastal airflow preservation" },
+      { name: "Dadar", risk: "High", temperature: 38.4, focus: "Shaded station-area movement corridors" },
+      { name: "Kurla", risk: "Very High", temperature: 40.9, focus: "Cool roofs and low-albedo surface replacement" },
+    ],
+    Hyderabad: [
+      { name: "Charminar", risk: "High", temperature: 39.7, focus: "Shaded heritage walkways and cool pavements" },
+      { name: "Secunderabad", risk: "High", temperature: 39.4, focus: "Station-area shade and ventilation corridors" },
+      { name: "HITEC City", risk: "Very High", temperature: 41.1, focus: "Green IT corridors and cool roofs" },
+      { name: "Gachibowli", risk: "High", temperature: 39.9, focus: "Corporate campus tree buffers" },
+      { name: "Madhapur", risk: "Very High", temperature: 41.3, focus: "Cool roofs and reflective parking surfaces" },
+      { name: "Kukatpally", risk: "High", temperature: 40.1, focus: "Residential canopy and surface cooling" },
+      { name: "Banjara Hills", risk: "Moderate", temperature: 37.8, focus: "Canopy preservation and slope ventilation" },
+      { name: "Begumpet", risk: "High", temperature: 39.2, focus: "Roadside trees and shaded public access" },
+      { name: "LB Nagar", risk: "Very High", temperature: 41.6, focus: "Green corridors and road heat mitigation" },
+      { name: "Shamshabad", risk: "High", temperature: 40.0, focus: "Heat-safe airport approach corridors" },
+      { name: "Uppal", risk: "High", temperature: 39.8, focus: "Lake restoration and canopy stitching" },
+      { name: "Mehdipatnam", risk: "Moderate", temperature: 37.9, focus: "Shaded pedestrian routes" },
+    ],
+    Bengaluru: [
+      { name: "MG Road", risk: "High", temperature: 38.7, focus: "Street trees and shaded commercial walking routes" },
+      { name: "Whitefield", risk: "Very High", temperature: 40.8, focus: "Green IT corridors and cool roofs" },
+      { name: "Electronic City", risk: "Very High", temperature: 40.5, focus: "Campus canopy and ventilation corridors" },
+      { name: "Koramangala", risk: "High", temperature: 38.9, focus: "Tree canopy protection and cool pavements" },
+      { name: "Indiranagar", risk: "High", temperature: 38.4, focus: "Street shade and surface cooling" },
+      { name: "Hebbal", risk: "Moderate", temperature: 36.8, focus: "Lake ventilation and green buffers" },
+      { name: "Yelahanka", risk: "Moderate", temperature: 36.5, focus: "Canopy protection near growth edges" },
+      { name: "Jayanagar", risk: "Moderate", temperature: 36.9, focus: "Preserve mature tree cover" },
+      { name: "Marathahalli", risk: "Very High", temperature: 40.2, focus: "IT corridor cooling and traffic-edge shade" },
+      { name: "Kengeri", risk: "Moderate", temperature: 36.7, focus: "Green buffers along expansion zones" },
+      { name: "HSR Layout", risk: "High", temperature: 38.5, focus: "Neighborhood canopy and cool rooftops" },
+      { name: "Rajajinagar", risk: "High", temperature: 38.8, focus: "Built-density cooling and shaded markets" },
+	    ],
+	  };
+	  const searchedPlaces = placeHeatIndex[city].filter((place) =>
+	    place.name.toLowerCase().includes(placeSearch.trim().toLowerCase())
+	  );
+	  const visiblePlaces = placeSearch.trim() ? searchedPlaces : placeHeatIndex[city].slice(0, 6);
+	  const hottestVisiblePlace = [...visiblePlaces].sort((a, b) => b.temperature - a.temperature)[0];
+	  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+  const hasInputData =
+  ndvi !== "" || humidity !== "" || windSpeed !== "" || buildingDensity !== "";
+  const liveNdvi = Number(ndvi) || 0;
+  const liveHumidity = Number(humidity) || 0;
+  const liveWind = Number(windSpeed) || 0;
+  const liveDensity = Number(buildingDensity) || 0;
+  const livePredictedTemp = 35 - liveNdvi * 5 - liveHumidity * 0.03 - liveWind * 0.08 + liveDensity * 0.12;
+  const activeTemperature = temperature !== null ? Number(temperature) : hasInputData ? livePredictedTemp : null;
+  const rawFeatureScores = {
+    ndvi: Math.max(8, 100 - clamp(liveNdvi * 100, 0, 100)),
+    humidity: Math.max(8, clamp(liveHumidity, 0, 100)),
+    wind: Math.max(8, 100 - clamp(liveWind * 4, 0, 100)),
+    density: Math.max(8, clamp(liveDensity, 0, 100)),
+  };
+  const totalFeatureScore =
+  rawFeatureScores.ndvi +
+  rawFeatureScores.humidity +
+  rawFeatureScores.wind +
+  rawFeatureScores.density;
+  const featureWeights = hasInputData? {
+    ndvi: Math.round((rawFeatureScores.ndvi / totalFeatureScore) * 100),
+    humidity: Math.round((rawFeatureScores.humidity / totalFeatureScore) * 100),
+    wind: Math.round((rawFeatureScores.wind / totalFeatureScore) * 100),
+    density: Math.round((rawFeatureScores.density / totalFeatureScore) * 100),
+  }
+  : {
+      ndvi: 45,
+      humidity: 30,
+      wind: 15,
+      density: 10,
+    };
+    const thermalPosition = activeTemperature === null? 52
+    : clamp(((activeTemperature - 28) / 18) * 100, 6, 94);
+    const thermalStatus =
+    activeTemperature === null
+    ? "Awaiting Input"
+    : activeTemperature >= 40
+    ? "Critical Thermal Anomaly"
+    : activeTemperature >= 35
+    ? "Moderate Radiation"
+    : "Cool Green Zone";
+    const thermalStatusColor =  activeTemperature === null
+    ? "#94a3b8"
+    : activeTemperature >= 40
+    ? "#ef4444"
+    : activeTemperature >= 35
+    ? "#f97316"
+    : "#22c55e";
+    async function handlePrediction() {
+      setIsScanning(true);
+    
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+      const response = await fetch(`${apiBaseUrl}/predict`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          city: city,
+          ndvi: Number(ndvi),
+          humidity: Number(humidity),
+          windSpeed: Number(windSpeed),
+          buildingDensity: Number(buildingDensity),
+        }),
+      });
+
+    const data = await response.json();
+
+    if (!response.ok || data.status !== "success") {
+      throw new Error(data.message || "Prediction request failed");
+    }
+
+    const roundedTemp = Number(data.temperature).toFixed(1);
+
+    setTemperature(roundedTemp);
+    setRiskLevel(data.risk);
+    setAiFactors(data.factors || []);
+    setRecommendations(data.recommendations || []);
+    setCoolingIndex(data.coolingIndex ?? null);
+    setConfidence(data.confidence ?? null);
+   } catch (error) {
+    console.error("Prediction failed:", error);
+    alert("Backend connection failed. Please check the API link.");
+   } finally {
+    setIsScanning(false);
+   }
+}
+  // ================= MAIN APP LAYOUT =================
+
+  return (
+  <div
+    style={{
+      backgroundColor: "#030712",
+      // We add the map here as a background image
+      backgroundImage: `
+        linear-gradient(to bottom, rgba(3, 7, 18, 0.8), rgba(3, 7, 18, 0.95)),
+        url('https://upload.wikimedia.org/wikipedia/commons/f/f3/India_location_map.svg')
+      `,
+      backgroundSize: "contain",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      minHeight: "100vh",
+      padding: "24px",
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      color: "#f8fafc",
+      position: "relative"
+    }}
+  >
+    {isScanning && <div className="scanning-overlay"></div>}
+
+    {/* ================= PAGE BACKGROUND WRAPPER ================= ^ */}
+
+    {/* ================= NAVBAR SECTION ================= */}
+  <nav
+  style={{
+    maxWidth: "1200px",
+    margin: "0 auto 40px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "16px 24px",
+    border: "1px solid rgba(255, 255, 255, 0.05)",
+    borderRadius: "12px",
+    backgroundColor: "rgba(15, 23, 42, 0.4)",
+    backdropFilter: "blur(16px)",
+    boxShadow: "0 4px 30px rgba(0, 0, 0, 0.4)",
+  }}
+>
+  {/* The "Lightning" Scan Line */}
+  
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "2px",
+      background: "linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.5), transparent)",
+      zIndex: 0,
+      animation: "scanline 8s linear infinite"
+    }}
+  ></div>
+
+  <style>
+    {`
+      @keyframes scanline {
+        0% { transform: translateY(-100vh); }
+        100% { transform: translateY(100vh); }
+      }
+    `}
+  </style>
+  <div
+  style={{
+    fontSize: "15px",
+    fontWeight: "800",
+    letterSpacing: "1.5px",
+    fontFamily: "'Orbitron', sans-serif",
+    color: "#ffffff",
+  }}
+>
+  HEATSHIELD <span style={{ color: "#f97316" }}>INDIA</span>
+</div>
+
+  <div
+    style={{
+      display: "flex",
+      gap: "24px",
+      color: "#cbd5e1",
+      fontSize: "14px",
+    }}
+  >
+    <span
+    className="dock-hover"
+  style={navLinkStyle}
+  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+>
+  Home
+</span>
+<span
+className="dock-hover"
+  style={navLinkStyle}
+  onClick={() =>
+    document.getElementById("prediction").scrollIntoView({ behavior: "smooth" })
+  }
+>
+  Prediction
+</span>
+<span
+  className="dock-hover"
+  style={navLinkStyle}
+  onClick={() =>
+    document.getElementById("heatmap").scrollIntoView({ behavior: "smooth" })
+  }
+>
+  Heatmap
+</span>
+<span
+  className="dock-hover"
+  style={navLinkStyle}
+  onClick={() =>
+    document.getElementById("insights").scrollIntoView({ behavior: "smooth" })
+  }
+>
+  Insights
+</span>
+<span
+  className="dock-hover"
+  style={navLinkStyle}
+  onClick={() =>
+    document.getElementById("about").scrollIntoView({ behavior: "smooth" })
+  }
+>
+  About
+</span>
+  </div>
+  </nav>
+{/* ================= HERO SECTION ================= */}
+      <section
+  style={{
+    maxWidth: "1180px",
+    margin: "0 auto 56px",
+    display: "grid",
+    gridTemplateColumns: "1.05fr 0.95fr",
+    gap: "40px",
+    alignItems: "center",
+  }}
+>
+  
+  <div>
+    <p
+  style={{
+    color: "#f97316",
+    fontSize: "11px",
+    fontWeight: "700",
+    marginBottom: "12px",
+    textTransform: "uppercase",
+    letterSpacing: "1.5px",
+    fontFamily: "'Orbitron', sans-serif",
+  }}
+>
+  AI Climate Analytics Engine
+</p>
+
+<h1
+  style={{
+    color: "#f8fafc",
+    fontSize: "42px",
+    fontWeight: "800",
+    letterSpacing: "-0.5px",
+    lineHeight: "1.2",
+    marginBottom: "16px",
+    maxWidth: "800px",
+    marginLeft: "auto",
+    marginRight: "auto",
+    textAlign: "center"
+  }}
+>
+  Physics-Informed Urban Thermal Analysis
+</h1>
+
+<p
+  style={{
+    fontSize: "14px",
+    color: "#94a3b8",
+    maxWidth: "680px",
+    lineHeight: "1.6",
+    marginBottom: "32px",
+    marginLeft: "auto",
+    marginRight: "auto",
+    textAlign: "center"
+  }}
+>
+  Synthesizing satellite Earth-observation telemetry, relative humidity configurations, and surface friction indices to map real-time microclimate anomalies.
+</p>
+
+    <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center" }}>
+  <button
+  className="dock-hover"
+    onClick={() => document.getElementById("prediction").scrollIntoView({ behavior: "smooth" })}
+    style={{
+      padding: "12px 20px",
+      fontSize: "13px",
+      fontWeight: "700",
+      letterSpacing: "0.5px",
+      backgroundColor: "#f97316",
+      color: "white",
+      border: "none",
+      borderRadius: "6px",
+      cursor: "pointer",
+      boxShadow: "0 4px 20px rgba(249,115,22,0.25)",
+      transition: "transform 0.2s ease, opacity 0.2s ease",
+    }}
+  >
+    LAUNCH CONSOLE SIMULATOR
+  </button>
+
+  <button
+  className="dock-hover"
+    onClick={() => document.getElementById("heatmap").scrollIntoView({ behavior: "smooth" })}
+    style={{
+      padding: "12px 20px",
+      fontSize: "13px",
+      fontWeight: "700",
+      letterSpacing: "0.5px",
+      backgroundColor: "rgba(255,255,255,0.03)",
+      color: "#e2e8f0",
+      border: "1px solid rgba(255,255,255,0.08)",
+      borderRadius: "6px",
+      cursor: "pointer",
+      transition: "background 0.2s ease",
+    }}
+  >
+    VIEW RADIATIVE MAPS
+  </button>
+</div>
+  </div>
+{/* Hero visual: India heat index graphic */}
+  <div
+  className="float-hero"
+  style={{
+    position: "relative",
+    minHeight: "380px",
+      borderRadius: "28px",
+      background:
+        "radial-gradient(circle at center, rgba(34,197,94,0.28), transparent 35%), linear-gradient(145deg, rgba(15,23,42,0.8), rgba(15,23,42,0.35))",
+      border: "1px solid rgba(255,255,255,0.12)",
+      boxShadow: "0 30px 80px rgba(0,0,0,0.35)",
+      overflow: "hidden",
+    }}
+  >
+    <div
+      style={{
+        position: "absolute",
+        width: "260px",
+        height: "260px",
+        borderRadius: "50%",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+        background:
+          "radial-gradient(circle at 35% 30%, #bbf7d0, #22c55e 28%, #166534 48%, #052e16 72%)",
+        boxShadow:
+          "0 0 50px rgba(34,197,94,0.55), inset -35px -25px 45px rgba(0,0,0,0.45)",
+      }}
+    ></div>
+        <div
+      style={{
+        position: "absolute",
+        top: "42px",
+        left: "32px",
+        color: "#86efac",
+        fontSize: "13px",
+        letterSpacing: "1.6px",
+        textTransform: "uppercase",
+        fontWeight: "bold",
+      }}
+    >
+      India Heat Index
+    </div>
+
+
+    <div style={{ ...hotspotStyle, top: "35%", left: "62%" }}></div>
+<div style={{ ...cityLabelStyle, top: "32%", left: "65%" }}>Delhi</div>
+
+<div style={{ ...hotspotStyle, top: "48%", left: "43%" }}></div>
+<div style={{ ...cityLabelStyle, top: "45%", left: "32%" }}>Ahmedabad</div>
+
+<div style={{ ...hotspotStyle, top: "61%", left: "58%" }}></div>
+<div style={{ ...cityLabelStyle, top: "58%", left: "61%" }}>Hyderabad</div>
+
+<div style={{ ...hotspotStyle, top: "72%", left: "45%" }}></div>
+<div style={{ ...cityLabelStyle, top: "69%", left: "35%" }}>Mumbai</div>
+
+    <div
+      style={{
+        position: "absolute",
+        left: "28px",
+        bottom: "28px",
+        backgroundColor: "rgba(2,6,23,0.72)",
+        border: "1px solid rgba(255,255,255,0.12)",
+        borderRadius: "18px",
+        padding: "16px",
+        color: "#e2e8f0",
+      }}
+    >
+      <p style={{ margin: "0 0 6px", color: "#f97316", fontWeight: "bold" }}>
+        Heat Risk Scan
+      </p>
+      <p style={{ margin: 0, fontSize: "14px", color: "#cbd5e1" }}>
+        Delhi • Ahmedabad • Hyderabad • Mumbai
+      </p>
+    </div>
+  </div>
+</section>
+{/* ================= DASHBOARD METRIC CARDS SECTION ================= */}
+      <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "16px",
+    maxWidth: "1200px",
+    margin: "40px auto 40px",
+  }}
+>
+  {/* CARD 1: NDVI */}
+  <div className="card-hover animate-card" style={{
+     backgroundColor: "rgba(15, 23, 42, 0.4)", border: "1px solid rgba(255, 255, 255, 0.04)", padding: "24px", borderRadius: "12px", position: "relative" }}>
+    <h3 style={{ margin: "0 0 4px 0", fontSize: "12px", color: "#94a3b8", letterSpacing: "1px", textTransform: "uppercase" }}>NDVI Telemetry</h3>
+    <p style={{ fontSize: "36px", fontWeight: "700", margin: "6px 0", color: "#22c55e" }}>0.42</p>
+    <span style={{ fontSize: "11px", color: "#64748b" }}>Vegetation Density Index</span>
+  </div>
+
+  {/* CARD 2: HUMIDITY */}
+  <div className="card-hover animate-card" style={{
+     backgroundColor: "rgba(15, 23, 42, 0.4)", border: "1px solid rgba(255, 255, 255, 0.04)", padding: "24px", borderRadius: "12px", position: "relative" }}>
+    <h3 style={{ margin: "0 0 4px 0", fontSize: "12px", color: "#94a3b8", letterSpacing: "1px", textTransform: "uppercase" }}>Relative Humidity</h3>
+    <p style={{ fontSize: "36px", fontWeight: "700", margin: "6px 0", color: "#3b82f6" }}>68%</p>
+    <span style={{ fontSize: "11px", color: "#64748b" }}>Atmospheric Moisture</span>
+  </div>
+
+  {/* CARD 3: WIND SPEED */}
+  <div className="card-hover animate-card" style={{
+     backgroundColor: "rgba(15, 23, 42, 0.4)", border: "1px solid rgba(255, 255, 255, 0.04)", padding: "24px", borderRadius: "12px", position: "relative" }}>
+    <h3 style={{ margin: "0 0 4px 0", fontSize: "12px", color: "#94a3b8", letterSpacing: "1px", textTransform: "uppercase" }}>Wind Velocity</h3>
+    <p style={{ fontSize: "36px", fontWeight: "700", margin: "6px 0", color: "#a855f7" }}>12 <span style={{ fontSize: "16px", color: "#64748b" }}>km/h</span></p>
+    <span style={{ fontSize: "11px", color: "#64748b" }}>Surface Ventilation Vector</span>
+  </div>
+
+  {/* CARD 4: PREDICTED TEMPERATURE */}
+  <div className="card-hover animate-card" style={{
+     backgroundColor: "rgba(15, 23, 42, 0.4)", border: "1px solid rgba(255, 255, 255, 0.04)", padding: "24px", borderRadius: "12px", position: "relative" }}>
+    <h3 style={{ margin: "0 0 4px 0", fontSize: "12px", color: "#94a3b8", letterSpacing: "1px", textTransform: "uppercase" }}>Computed Thermal</h3>
+    <p style={{ fontSize: "36px", fontWeight: "700", margin: "6px 0", color: temperature ? "#fb7185" : "#475569" }}>
+      {temperature !== null ? `${temperature}°C` : "--"}
+    </p>
+    <span style={{ fontSize: "11px", color: "#64748b" }}>Target Output Level</span>
+  </div>
+
+  {/* CARD 5: URBAN COOLING INDEX */}
+  <div className="card-hover animate-card" style={{
+     backgroundColor: "rgba(15, 23, 42, 0.4)", border: "1px solid rgba(34, 197, 94, 0.16)", padding: "24px", borderRadius: "12px", position: "relative" }}>
+    <h3 style={{ margin: "0 0 4px 0", fontSize: "12px", color: "#94a3b8", letterSpacing: "1px", textTransform: "uppercase" }}>Urban Cooling Index</h3>
+    <p style={{ fontSize: "36px", fontWeight: "700", margin: "6px 0", color: coolingIndex !== null ? "#86efac" : "#475569" }}>
+      {coolingIndex !== null ? coolingIndex : "--"}
+    </p>
+    <span style={{ fontSize: "11px", color: "#64748b" }}>0-100 cooling resilience score</span>
+  </div>
+
+  {/* CARD 6: AI CONFIDENCE */}
+  <div className="card-hover animate-card" style={{
+     backgroundColor: "rgba(15, 23, 42, 0.4)", border: "1px solid rgba(249, 115, 22, 0.18)", padding: "24px", borderRadius: "12px", position: "relative" }}>
+    <h3 style={{ margin: "0 0 4px 0", fontSize: "12px", color: "#94a3b8", letterSpacing: "1px", textTransform: "uppercase" }}>AI Confidence</h3>
+    <p style={{ fontSize: "36px", fontWeight: "700", margin: "6px 0", color: confidence !== null ? "#fdba74" : "#475569" }}>
+      {confidence !== null ? `${confidence}%` : "--"}
+    </p>
+    <span style={{ fontSize: "11px", color: "#64748b" }}>Input reliability and model fit</span>
+  </div>
+</div>
+
+
+{/* ================= PREDICTION CONTROL PANEL SECTION ================= */}
+
+      <div
+  id="prediction"
+  style={{
+    maxWidth: "700px",
+    margin: "0 auto 40px",
+    padding: "28px",
+    borderRadius: "16px",
+    backgroundColor: "rgba(11, 17, 32, 0.7)",
+    border: "1px solid rgba(255, 255, 255, 0.05)",
+    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+  }}
+>
+  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
+    <span style={{ width: "8px", height: "8px", backgroundColor: "#f97316", borderRadius: "50%" }}></span>
+    <h2 style={{ color: "#f8fafc", margin: 0, fontSize: "18px", fontFamily: "'Orbitron', sans-serif", letterSpacing: "0.5px" }}>
+      Predictive Engine Control Panel
+    </h2>
+  </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "16px",
+            marginBottom: "20px",
+          }}
+        >
+          {/* CITY FIELD */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            <label
+              style={{
+                fontSize: "12px",
+                color: "#94a3b8",
+                fontWeight: "600",
+                textAlign: "left",
+              }}
+           >
+             Select City
+           </label>
+           
+           <select
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              style={{
+                backgroundColor: "rgba(3, 7, 18, 0.5)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: "6px",
+                padding: "10px 14px",
+                color: "#f8fafc",
+                outline: "none",
+                fontSize: "14px",
+              }}
+            >
+              <option value="Delhi">Delhi</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Hyderabad">Hyderabad</option>
+              <option value="Bengaluru">Bengaluru</option>
+            </select>
+          </div>
+          {/* NDVI FIELD */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            <label style={{ fontSize: "12px", color: "#94a3b8", fontWeight: "600", textAlign: "left" }}>
+              NDVI Value
+            </label>
+            <input
+              style={{
+                backgroundColor: "rgba(3, 7, 18, 0.5)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: "6px",
+                padding: "10px 14px",
+                color: "#f8fafc",
+                outline: "none",
+                fontSize: "14px"
+              }}
+              placeholder="e.g. 0.35"
+              value={ndvi}
+              onChange={(event) => setNdvi(event.target.value)}
+            />
+          </div>
+          {/* HUMIDITY FIELD */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            <label style={{ fontSize: "12px", color: "#94a3b8", fontWeight: "600", textAlign: "left" }}>Humidity (%)</label>
+            <input 
+              style={{ backgroundColor: "rgba(3, 7, 18, 0.5)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "6px", padding: "10px 14px", color: "#f8fafc", outline: "none", fontSize: "14px" }} 
+              placeholder="e.g. 65" 
+              value={humidity} 
+              onChange={(event) => setHumidity(event.target.value)} 
+            />
+          </div>
+
+          {/* WIND SPEED FIELD */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            <label style={{ fontSize: "12px", color: "#94a3b8", fontWeight: "600", textAlign: "left" }}>Wind Speed (km/h)</label>
+            <input 
+              style={{ backgroundColor: "rgba(3, 7, 18, 0.5)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "6px", padding: "10px 14px", color: "#f8fafc", outline: "none", fontSize: "14px" }} 
+              placeholder="e.g. 14" 
+              value={windSpeed} 
+              onChange={(event) => setWindSpeed(event.target.value)} 
+            />
+          </div>
+
+          {/* BUILDING DENSITY FIELD */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            <label style={{ fontSize: "12px", color: "#94a3b8", fontWeight: "600", textAlign: "left" }}>Building Density (%)</label>
+            <input 
+              style={{ backgroundColor: "rgba(3, 7, 18, 0.5)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "6px", padding: "10px 14px", color: "#f8fafc", outline: "none", fontSize: "14px" }} 
+              placeholder="e.g. 75" 
+              value={buildingDensity} 
+              onChange={(event) => setBuildingDensity(event.target.value)} 
+            />
+          </div>
+        </div>
+
+        <button
+        className="dock-hover"
+          onClick={handlePrediction}
+          style={{
+            width: "100%",
+            padding: "12px",
+            fontSize: "13px",
+            fontWeight: "700",
+            letterSpacing: "1px",
+            fontFamily: "'Orbitron', sans-serif",
+            background: "linear-gradient(135deg, #f97316, #ea580c)",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            marginTop: "10px",
+            boxShadow: "0 4px 20px rgba(249, 115, 22, 0.2)",
+          }}
+        >
+          {isScanning ? "SCANNING THERMAL DATA..." : "EXECUTE PREDICTIVE SIMULATION"}
+        </button>
+
+        {temperature !== null && (
+          <div
+            style={{
+              marginTop: "20px",
+              padding: "20px",
+              backgroundColor: "rgba(244, 63, 94, 0.03)",
+              border: "1px solid rgba(244, 63, 94, 0.15)",
+              borderRadius: "8px",
+              textAlign: "center",
+            }}
+          >
+            <h4 style={{ margin: "0 0 6px 0", fontSize: "11px", color: "#f43f5e", letterSpacing: "1px", fontFamily: "'Orbitron', sans-serif" }}>
+              SIMULATION MATRIX COMPLETE
+            </h4>
+            <div style={{ fontSize: "42px", fontWeight: "800", color: "#fda4af", margin: "4px 0" }}>
+              {temperature}°C
+            </div>
+            <div
+              style={{
+                display: "inline-block",
+                fontSize: "11px",
+                fontWeight: "700",
+                letterSpacing: "0.5px",
+                color: riskLevel === "Extreme" || riskLevel === "High" ? "#ef4444" : riskLevel === "Moderate" ? "#f97316" : "#22c55e",
+                backgroundColor: "rgba(0, 0, 0, 0.2)",
+                padding: "4px 10px",
+                borderRadius: "4px",
+                border: "1px solid rgba(255, 255, 255, 0.05)",
+                marginBottom: "20px",
+              }}
+            >
+              SYSTEM STATE STATS: {riskLevel} RISK CORRIDOR
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                gap: "12px",
+                margin: "0 0 22px",
+              }}
+            >
+              <div style={{ backgroundColor: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.18)", borderRadius: "8px", padding: "14px" }}>
+                <h3 style={{ margin: "0 0 8px", color: "#86efac", fontSize: "12px", letterSpacing: "1px", fontFamily: "'Orbitron', sans-serif" }}>
+                  Urban Cooling Index
+                </h3>
+                <strong style={{ color: "#f8fafc", fontSize: "28px" }}>{coolingIndex !== null ? coolingIndex : "--"}</strong>
+              </div>
+
+              <div style={{ backgroundColor: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.2)", borderRadius: "8px", padding: "14px" }}>
+                <h3 style={{ margin: "0 0 8px", color: "#fdba74", fontSize: "12px", letterSpacing: "1px", fontFamily: "'Orbitron', sans-serif" }}>
+                  AI Confidence Score
+                </h3>
+                <strong style={{ color: "#f8fafc", fontSize: "28px" }}>{confidence !== null ? `${confidence}%` : "--"}</strong>
+              </div>
+            </div>
+
+              <hr
+              style={{
+                margin: "24px 0",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }} 
+              />
+              <h3
+              style={{
+                color: "#f8fafc",
+                textAlign: "left",
+                marginBottom: "12px",
+              }}
+              >
+                AI Heat Analysis
+              </h3>
+              {aiFactors.map((factor, index) => (
+              <div
+              key={index}
+              style={{
+                color: "#cbd5e1",
+                textAlign: "left",
+                marginBottom: "8px",
+              }}
+            >
+              - {factor}
+              </div>
+            ))}
+            <h3
+            style={{
+              color: "#86efac",
+              textAlign: "left",
+              marginTop: "24px",
+              marginBottom: "12px",
+            }}
+            >
+              Cooling Recommendations
+            </h3>
+            {recommendations.map((item, index) => (
+            <div
+            key={index}
+            style={{
+              color: "#86efac",
+              textAlign: "left",
+              marginBottom: "8px",
+            }}
+            >
+            - {item}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+
+      {/* ================= INSIGHTS / FEATURE IMPORTANCE SECTION ================= */}
+
+
+            <div
+  id="insights"
+  style={{
+    backgroundColor: "rgba(11, 17, 32, 0.7)",
+    border: "1px solid rgba(255, 255, 255, 0.05)",
+    padding: "40px",
+    borderRadius: "16px",
+    maxWidth: "1200px",
+    margin: "40px auto 0",
+    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+    boxSizing: "border-box"
+  }}
+>
+  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "32px" }}>
+    <span style={{ width: "10px", height: "10px", backgroundColor: "#22c55e", borderRadius: "50%", boxShadow: "0 0 12px #22c55e" }}></span>
+    <h2 style={{ color: "#f8fafc", margin: 0, fontSize: "20px", fontFamily: "'Orbitron', sans-serif", letterSpacing: "0.75px" }}>
+      Neural Weights & Feature Attribution Matrix
+    </h2>
+  </div>
+
+  <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    {/* NDVI */}
+    <div style={{ display: "grid", gridTemplateColumns: "180px 1fr 60px", alignItems: "center", gap: "20px" }}>
+      <span style={{ color: "#94a3b8", fontWeight: "700", fontSize: "14px", textAlign: "left" }}>NDVI Telemetry</span>
+      <div style={{ height: "16px", backgroundColor: "rgba(255, 255, 255, 0.03)", borderRadius: "6px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)", padding: "2px" }}>
+        <div className="bar-fill-animate" style={{ height: "100%", width: `${featureWeights.ndvi}%`, backgroundColor: "#22c55e", borderRadius: "4px", boxShadow: "0 0 10px rgba(34, 197, 94, 0.5)" }}></div>
+      </div>
+      <strong style={{ color: "#f8fafc", textAlign: "right", fontSize: "16px", fontFamily: "'Orbitron', sans-serif" }}>45%</strong>
+    </div>
+
+    {/* HUMIDITY */}
+    <div style={{ display: "grid", gridTemplateColumns: "180px 1fr 60px", alignItems: "center", gap: "20px" }}>
+      <span style={{ color: "#94a3b8", fontWeight: "700", fontSize: "14px", textAlign: "left" }}>Air Moisture</span>
+      <div style={{ height: "16px", backgroundColor: "rgba(255, 255, 255, 0.03)", borderRadius: "6px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)", padding: "2px" }}>
+        <div className="bar-fill-animate" style={{ height: "100%", width: `${featureWeights.humidity}%`, backgroundColor: "#3b82f6", borderRadius: "4px", boxShadow: "0 0 10px rgba(59, 130, 246, 0.5)" }}></div>
+      </div>
+      <strong style={{ color: "#f8fafc", textAlign: "right", fontSize: "16px", fontFamily: "'Orbitron', sans-serif" }}>30%</strong>
+    </div>
+
+    {/* WIND SPEED */}
+    <div style={{ display: "grid", gridTemplateColumns: "180px 1fr 60px", alignItems: "center", gap: "20px" }}>
+      <span style={{ color: "#94a3b8", fontWeight: "700", fontSize: "14px", textAlign: "left" }}>Wind Velocity</span>
+      <div style={{ height: "16px", backgroundColor: "rgba(255, 255, 255, 0.03)", borderRadius: "6px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)", padding: "2px" }}>
+        <div className="bar-fill-animate" style={{ height: "100%", width: `${featureWeights.wind}%`, backgroundColor: "#a855f7", borderRadius: "4px", boxShadow: "0 0 10px rgba(168, 85, 247, 0.5)" }}></div>
+      </div>
+      <strong style={{ color: "#f8fafc", textAlign: "right", fontSize: "16px", fontFamily: "'Orbitron', sans-serif" }}>15%</strong>
+    </div>
+
+    {/* BUILDING DENSITY */}
+    <div style={{ display: "grid", gridTemplateColumns: "180px 1fr 60px", alignItems: "center", gap: "20px" }}>
+      <span style={{ color: "#94a3b8", fontWeight: "700", fontSize: "14px", textAlign: "left" }}>Urban Canopy</span>
+      <div style={{ height: "16px", backgroundColor: "rgba(255, 255, 255, 0.03)", borderRadius: "6px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)", padding: "2px" }}>
+        <div  className="bar-fill-animate" style={{ height: "100%", width: `${featureWeights.density}%`, backgroundColor: "#fb7185", borderRadius: "4px", boxShadow: "0 0 10px rgba(251, 113, 113, 0.5)" }}></div>
+      </div>
+      <strong style={{ color: "#f8fafc", textAlign: "right", fontSize: "16px", fontFamily: "'Orbitron', sans-serif" }}>10%</strong>
+    </div>
+  </div>
+</div>
+
+{/* ================= HEATMAP / RADIATIVE SPECTRUM SECTION ================= */}
+
+
+ <div
+  id="heatmap"
+  className="card-hover animate-card"
+  style={{
+    backgroundColor: "rgba(11, 17, 32, 0.7)",
+    border: "1px solid rgba(255, 255, 255, 0.05)",
+    padding: "40px",
+    borderRadius: "24px",
+    maxWidth: "1200px",
+    margin: "60px auto 0",
+    boxShadow: "0 20px 50px rgba(0, 0, 0, 0.4)",
+    boxSizing: "border-box"
+  }}
+>
+  
+  {/* TITLE AREA */}
+  <div style={{ marginBottom: "50px" }}>
+    <h2 style={{ color: "#f8fafc", margin: "0 0 12px 0", fontSize: "28px", fontFamily: "'Orbitron', sans-serif", letterSpacing: "1px" }}>
+      SURFACE RADIATIVE SPECTRUM CORRIDOR
+    </h2>
+    <p style={{ color: "#94a3b8", fontSize: "16px", maxWidth: "600px" }}>
+      Continuous thermodynamic tracking of surface friction and albedo feedback loops across the urban canopy.
+    </p>
+  </div>
+  <h3
+   style={{
+     color: "#f8fafc",
+     marginBottom: "16px",
+     textAlign: "center",
+     fontFamily: "'Orbitron', sans-serif",
+     fontSize: "20px",
+     fontWeight: "700",
+   }}
+  >
+  {city} Urban Heatmap
+  </h3>
+
+		  <div style={{ marginTop: "30px", marginBottom: "48px" }}>
+	    {heatmapFiles[city].type === "image" ? (
+	      <img
+       src={heatmapFiles[city].src}
+       alt={`${city} Heatmap`}
+       style={{
+         width: "100%",
+         height: "600px",
+         objectFit: "contain",
+         borderRadius: "18px",
+         border: "1px solid rgba(255,255,255,0.12)",
+         backgroundColor: "#020617",
+       }}
+     />
+   ) : (
+     <iframe
+       src={heatmapFiles[city].src}
+       title={`${city} Heatmap`}
+       style={{
+         width: "100%",
+         height: "430px",
+         border: "none",
+         borderRadius: "18px",
+         overflow: "hidden",
+         backgroundColor: "#020617",
+         boxShadow: "0 20px 45px rgba(0,0,0,0.35)",
+       }}
+	     />
+		   )}
+			 </div>
+  <div
+    style={{
+      margin: "0 0 48px",
+      padding: "22px",
+      borderRadius: "14px",
+      backgroundColor: "rgba(2, 6, 23, 0.48)",
+      border: "1px solid rgba(255,255,255,0.08)",
+    }}
+  >
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        gap: "18px",
+        alignItems: "flex-end",
+        flexWrap: "wrap",
+        marginBottom: "18px",
+      }}
+    >
+      <div>
+        <h3
+          style={{
+            margin: "0 0 8px",
+            color: "#f8fafc",
+            fontSize: "18px",
+            fontFamily: "'Orbitron', sans-serif",
+            letterSpacing: "0.75px",
+          }}
+        >
+          Place Heat Search
+        </h3>
+	        <p style={{ margin: 0, color: "#94a3b8", fontSize: "14px", lineHeight: "1.6" }}>
+	          Search {city} zones and hover the blue map pins for place names without cluttering the heat layer.
+	        </p>
+      </div>
+
+      {hottestVisiblePlace && (
+        <div
+          style={{
+            padding: "10px 14px",
+            borderRadius: "8px",
+            color: "#fed7aa",
+            backgroundColor: "rgba(249,115,22,0.1)",
+            border: "1px solid rgba(249,115,22,0.22)",
+            fontSize: "12px",
+            fontWeight: "700",
+          }}
+        >
+          Hottest match: {hottestVisiblePlace.name} - {hottestVisiblePlace.temperature.toFixed(1)}°C
+        </div>
+      )}
+    </div>
+
+    <input
+      value={placeSearch}
+      onChange={(event) => setPlaceSearch(event.target.value)}
+      placeholder={`Search places in ${city}`}
+      style={{
+        width: "100%",
+        padding: "12px 14px",
+        borderRadius: "8px",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        backgroundColor: "rgba(3, 7, 18, 0.62)",
+        color: "#f8fafc",
+        outline: "none",
+        fontSize: "14px",
+        marginBottom: "16px",
+      }}
+    />
+
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
+        gap: "12px",
+      }}
+    >
+      {visiblePlaces.length > 0 ? (
+        visiblePlaces.map((place) => {
+          const riskColor =
+            place.risk === "Very High"
+              ? "#ef4444"
+              : place.risk === "High"
+              ? "#f97316"
+              : "#22c55e";
+
+          return (
+            <article
+              key={place.name}
+              className="card-hover"
+              style={{
+                padding: "16px",
+                borderRadius: "10px",
+                backgroundColor: "rgba(15, 23, 42, 0.62)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                textAlign: "left",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: "10px",
+                  alignItems: "center",
+                  marginBottom: "12px",
+                }}
+              >
+                <strong style={{ color: "#f8fafc", fontSize: "15px" }}>{place.name}</strong>
+                <span
+                  style={{
+                    color: riskColor,
+                    fontSize: "11px",
+                    fontWeight: "800",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  {place.risk}
+                </span>
+              </div>
+              <div style={{ color: riskColor, fontSize: "26px", fontWeight: "800", marginBottom: "8px" }}>
+                {place.temperature.toFixed(1)}°C
+              </div>
+              <p style={{ margin: 0, color: "#94a3b8", fontSize: "13px", lineHeight: "1.5" }}>
+                {place.focus}
+              </p>
+            </article>
+          );
+        })
+      ) : (
+        <div
+          style={{
+            gridColumn: "1 / -1",
+            padding: "16px",
+            color: "#94a3b8",
+            border: "1px dashed rgba(255,255,255,0.14)",
+            borderRadius: "8px",
+            textAlign: "center",
+          }}
+        >
+          No matching heatmap place found for {city}.
+        </div>
+      )}
+    </div>
+  </div>
+	  {/* THE EXPANDED THERMAL GRADIENT ENGINE */}
+	  <div style={{ position: "relative", padding: "40px 0 60px 0" }}>
+    
+    <div 
+      style={{ 
+        height: "48px", 
+        background: "linear-gradient(to right, #16a34a, #22c55e, #a3e635, #eab308, #f97316, #dc2626, #7f1d1d)", 
+        borderRadius: "12px",
+        boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
+        border: "1px solid rgba(255,255,255,0.1)"
+      }}
+    >
+      {/* INDICATORS - NOW SPACED FOR MAXIMUM IMPACT */}
+      <div style={{ position: "absolute", left: "15%", top: "-20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <span style={{ fontSize: "12px", fontFamily: "'Orbitron', sans-serif", fontWeight: "700", color: "#86efac", marginBottom: "8px" }}>ECOLOGICAL BUFFER</span>
+        <div style={{ width: "3px", height: "80px", backgroundColor: "#86efac", opacity: 0.8 }}></div>
+      </div>
+
+      <div style={{ position: "absolute", left: "52%", top: "-20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <span style={{ fontSize: "12px", fontFamily: "'Orbitron', sans-serif", fontWeight: "700", color: "#fde68a", marginBottom: "8px" }}>URBAN CHILL SECTOR</span>
+        <div style={{ width: "3px", height: "80px", backgroundColor: "#fde68a", opacity: 0.8 }}></div>
+      </div>
+
+      <div style={{ position: "absolute", left: "85%", top: "-20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <span style={{ fontSize: "12px", fontFamily: "'Orbitron', sans-serif", fontWeight: "700", color: "#fca5a5", marginBottom: "8px" }}>CRITICAL THERMAL ANOMALY</span>
+        <div style={{ width: "3px", height: "80px", backgroundColor: "#fca5a5", opacity: 1, boxShadow: "0 0 12px #ef4444" }}></div>
+      </div>
+    </div>
+    <div
+  style={{
+    position: "absolute",
+    left: `${thermalPosition}%`,
+    top: "18px",
+    transform: "translateX(-50%)",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    zIndex: 4,
+  }}
+>
+  <span
+    style={{
+      fontSize: "11px",
+      fontFamily: "'Orbitron', sans-serif",
+      fontWeight: "800",
+      color: thermalStatusColor,
+      marginBottom: "8px",
+      whiteSpace: "nowrap",
+    }}
+  >
+    {thermalStatus}
+  </span>
+
+  <div
+    style={{
+      width: "4px",
+      height: "88px",
+      backgroundColor: thermalStatusColor,
+      boxShadow: `0 0 18px ${thermalStatusColor}`,
+      borderRadius: "999px",
+    }}
+  ></div>
+
+  <span
+    style={{
+      marginTop: "8px",
+      fontSize: "12px",
+      color: "#f8fafc",
+      fontWeight: "800",
+    }}
+  >
+    {activeTemperature === null ? "--" : `${activeTemperature.toFixed(1)}°C`}
+  </span>
+</div>
+  </div>
+
+  {/* LOWER METRIC FOOTER - ENLARGED */}
+  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "40px", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "30px" }}>
+    <div>
+      <div style={{ color: "#22c55e", fontWeight: "800", fontSize: "18px", marginBottom: "8px" }}>Cool Green Zones</div>
+      <div style={{ color: "#94a3b8", fontSize: "14px", lineHeight: "1.6" }}>High canopy density and active vegetation-based cooling corridors.</div>
+    </div>
+    <div>
+      <div style={{ color: "#eab308", fontWeight: "800", fontSize: "18px", marginBottom: "8px" }}>Moderate Radiation</div>
+      <div style={{ color: "#94a3b8", fontSize: "14px", lineHeight: "1.6" }}>Suburban transitional zones requiring minor thermal mitigation.</div>
+    </div>
+    <div>
+      <div style={{ color: "#ef4444", fontWeight: "800", fontSize: "18px", marginBottom: "8px" }}>Albedo Core Hotspots</div>
+      <div style={{ color: "#94a3b8", fontSize: "14px", lineHeight: "1.6" }}>High built-density areas exhibiting significant heat retention.</div>
+    </div>
+  </div>
+</div>
+
+
+{/* ================= HEATMAP / RADIATIVE SPECTRUM SECTION ================= */}
+
+
+
+                  <div
+        style={{
+          maxWidth: "980px",
+          margin: "40px auto 0",
+        }}
+      >
+        <h2
+          style={{
+            color: "#f8fafc",
+            textAlign: "center",
+            marginBottom: "24px",
+          }}
+        >
+          High-Risk City Zones
+        </h2>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: "18px",
+          }}
+        >
+          <div style={cityCardStyle}>
+  <div style={{ ...riskStripStyle, background: "#dc2626" }}></div>
+  <h3 style={{ color: "#f8fafc", marginBottom: "8px" }}>Delhi</h3>
+  <p style={{ color: "#cbd5e1", marginBottom: "14px" }}>Very High Heat Risk</p>
+  <strong style={{ color: "#fb7185", fontSize: "28px" }}>42.1°C</strong>
+</div>
+
+<div style={cityCardStyle}>
+  <div style={{ ...riskStripStyle, background: "#f97316" }}></div>
+  <h3 style={{ color: "#f8fafc", marginBottom: "8px" }}>Ahmedabad</h3>
+  <p style={{ color: "#cbd5e1", marginBottom: "14px" }}>High Heat Risk</p>
+  <strong style={{ color: "#fdba74", fontSize: "28px" }}>41.4°C</strong>
+</div>
+
+<div style={cityCardStyle}>
+  <div style={{ ...riskStripStyle, background: "#facc15" }}></div>
+  <h3 style={{ color: "#f8fafc", marginBottom: "8px" }}>Hyderabad</h3>
+  <p style={{ color: "#cbd5e1", marginBottom: "14px" }}>Moderate Heat Risk</p>
+  <strong style={{ color: "#fde68a", fontSize: "28px" }}>38.7°C</strong>
+</div>
+
+<div style={cityCardStyle}>
+  <div style={{ ...riskStripStyle, background: "#22c55e" }}></div>
+  <h3 style={{ color: "#f8fafc", marginBottom: "8px" }}>Mumbai</h3>
+  <p style={{ color: "#cbd5e1", marginBottom: "14px" }}>Humidity-Linked Risk</p>
+  <strong style={{ color: "#86efac", fontSize: "28px" }}>36.9°C</strong>
+</div>
+        </div>
+      </div>
+      <div
+
+    //ABOUT / MISSION OBJECTIVE STATEMNENT 
+
+
+  id="about"
+  style={{
+    maxWidth: "800px",
+    margin: "60px auto 0",
+    padding: "40px",
+    backgroundColor: "rgba(3, 7, 18, 0.4)",
+    borderLeft: "4px solid #f97316",
+    borderTop: "1px solid rgba(255, 255, 255, 0.05)",
+    borderRight: "1px solid rgba(255, 255, 255, 0.05)",
+    borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+    borderRadius: "0 12px 12px 0",
+    textAlign: "left",
+  }}
+>
+  <h2
+    style={{
+      color: "#ffffff",
+      marginBottom: "20px",
+      fontSize: "20px",
+      fontFamily: "'Orbitron', sans-serif",
+      letterSpacing: "1px",
+      textTransform: "uppercase",
+    }}
+  >
+    System Intelligence & Mission Objective
+  </h2>
+
+  <p
+    style={{
+      color: "#cbd5e1",
+      fontSize: "15px",
+      lineHeight: "1.8",
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      margin: 0,
+    }}
+  >
+    HeatShield India is an advanced geospatial analytics framework developed for the 2026 Bharatiya Antariksh Hackathon. By synthesizing multi-source satellite telemetry with urban surface friction metrics, the system identifies microclimate anomalies to guide urban heat mitigation strategies. Our objective is to assist policymakers in optimizing green cover expansion, reducing high-albedo material impact, and restoring natural ventilation corridors to ensure long-term thermal resilience in urban centers.
+  </p>
+</div>
+
+{/* ================= FOOTER SECTION ================= */}
+
+      <footer
+        style={{
+          maxWidth: "1180px",
+          margin: "48px auto 0",
+          padding: "22px 0",
+          borderTop: "1px solid rgba(255,255,255,0.12)",
+          display: "flex",
+          justifyContent: "space-between",
+          gap: "16px",
+          flexWrap: "wrap",
+          color: "#cbd5e1",
+          fontSize: "14px",
+        }}
+      >
+        <span>Powered by Team HeatShield</span>
+        <span>Built for ISRO Hackathon 2026 • Urban Heat Mitigation</span>
+      </footer>
+    </div>
+  );
+}
+
+// ================= STYLE CONSTANTS =================
+
+const hotspotStyle = {
+  position: "absolute",
+  width: "16px",
+  height: "16px",
+  borderRadius: "50%",
+  backgroundColor: "#ef4444",
+  boxShadow: "0 0 0 8px rgba(239,68,68,0.22), 0 0 28px rgba(239,68,68,0.9)",
+  animation: "pulseHotspot 1.8s ease-in-out infinite",
+};
+const cityCardStyle = {
+  position: "relative",
+  overflow: "hidden",
+  backgroundColor: "rgba(15, 23, 42, 0.72)",
+  padding: "24px",
+  borderRadius: "18px",
+  border: "1px solid rgba(255, 255, 255, 0.12)",
+  boxShadow: "0 18px 45px rgba(0, 0, 0, 0.25)",
+  color: "#f8fafc",
+};
+const riskStripStyle = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "5px",
+};
+const cityLabelStyle = {
+  position: "absolute",
+  color: "#f8fafc",
+  fontSize: "12px",
+  backgroundColor: "rgba(2, 6, 23, 0.65)",
+  border: "1px solid rgba(255, 255, 255, 0.12)",
+  borderRadius: "999px",
+  padding: "5px 9px",
+};
+const navLinkStyle = {
+  cursor: "pointer",
+  transition: "0.2s",
+};
+const styleSheet = document.createElement("style");
+styleSheet.innerText = `
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulseHotspot { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .animate-card { animation: fadeIn 0.6s ease-out forwards; }
+  .card-hover { transition: transform 0.3s ease; }
+  .card-hover:hover { transform: translateY(-5px); border-color: rgba(249, 115, 22, 0.4); }
+  .scanning-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(transparent, rgba(249, 115, 22, 0.1), transparent); animation: scan-move 2s linear infinite; pointer-events: none; z-index: 100; }
+  @keyframes scan-move { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+    .bar-fill-animate {
+    transform-origin: left;
+    animation: growBar 1.1s ease-out forwards;
+  }
+
+  @keyframes growBar {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+      .dock-hover {
+    display: inline-block;
+    transition: transform 0.18s ease, filter 0.18s ease;
+  }
+
+  .dock-hover:hover {
+    transform: scale(1.06);
+    filter: brightness(1.15);
+  }
+
+  .dock-hover:active {
+    transform: scale(0.98);
+  }
+`;
+document.head.appendChild(styleSheet);
+
+export default App;
