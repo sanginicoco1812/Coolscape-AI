@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 function App() {
   const [ndvi, setNdvi] = useState("");
   const [humidity, setHumidity] = useState("");
@@ -12,7 +12,64 @@ function App() {
   const [coolingIndex, setCoolingIndex] = useState(null);
   const [confidence, setConfidence] = useState(null);
   const [placeSearch, setPlaceSearch] = useState("");
+  const [heatThreshold, setHeatThreshold] = useState(40);
   const [isScanning, setIsScanning] = useState(false); // Add this line
+
+  useEffect(() => {
+    if (!window.matchMedia("(pointer: fine)").matches) return undefined;
+
+    const root = document.documentElement;
+    let cursorX = window.innerWidth / 2;
+    let cursorY = window.innerHeight / 2;
+    let outlineX = cursorX;
+    let outlineY = cursorY;
+    let animationFrame;
+
+    const updatePosition = (event) => {
+      cursorX = event.clientX;
+      cursorY = event.clientY;
+      root.style.setProperty("--cursor-x", `${cursorX}px`);
+      root.style.setProperty("--cursor-y", `${cursorY}px`);
+    };
+
+    const animateOutline = () => {
+      outlineX += (cursorX - outlineX) * 0.18;
+      outlineY += (cursorY - outlineY) * 0.18;
+      root.style.setProperty("--cursor-outline-x", `${outlineX}px`);
+      root.style.setProperty("--cursor-outline-y", `${outlineY}px`);
+      animationFrame = requestAnimationFrame(animateOutline);
+    };
+
+    const setHoverState = (event) => {
+      if (
+        event.target.closest(
+          "button, a, input, select, textarea, iframe, .card-hover, .dock-hover"
+        )
+      ) {
+        root.classList.add("cursor-hovering");
+      } else {
+        root.classList.remove("cursor-hovering");
+      }
+    };
+
+    root.classList.add("mission-cursor-enabled");
+    root.style.setProperty("--cursor-x", `${cursorX}px`);
+    root.style.setProperty("--cursor-y", `${cursorY}px`);
+    root.style.setProperty("--cursor-outline-x", `${outlineX}px`);
+    root.style.setProperty("--cursor-outline-y", `${outlineY}px`);
+
+    window.addEventListener("mousemove", updatePosition);
+    window.addEventListener("mouseover", setHoverState);
+    animationFrame = requestAnimationFrame(animateOutline);
+
+    return () => {
+      root.classList.remove("mission-cursor-enabled", "cursor-hovering");
+      window.removeEventListener("mousemove", updatePosition);
+      window.removeEventListener("mouseover", setHoverState);
+      cancelAnimationFrame(animationFrame);
+    };
+  }, []);
+
   const heatmapFiles = {
     Delhi: {
       type: "html",
@@ -90,8 +147,30 @@ function App() {
 	  const searchedPlaces = placeHeatIndex[city].filter((place) =>
 	    place.name.toLowerCase().includes(placeSearch.trim().toLowerCase())
 	  );
-	  const visiblePlaces = placeSearch.trim() ? searchedPlaces : placeHeatIndex[city].slice(0, 6);
+	  const thresholdPlaces = searchedPlaces.filter(
+	    (place) => place.temperature >= heatThreshold
+	  );
+	  const visiblePlaces = placeSearch.trim()
+	    ? thresholdPlaces
+	    : thresholdPlaces.slice(0, 6);
+	  const thresholdCount = thresholdPlaces.length;
 	  const hottestVisiblePlace = [...visiblePlaces].sort((a, b) => b.temperature - a.temperature)[0];
+	  const coolingEngineMode =
+	    coolingIndex === null
+	      ? "Awaiting Prediction"
+	      : coolingIndex >= 70
+	      ? "Preserve Cooling Assets"
+	      : coolingIndex >= 45
+	      ? "Targeted Cooling Required"
+	      : "Critical Cooling Intervention";
+	  const coolingEngineColor =
+	    coolingIndex === null
+	      ? "#94a3b8"
+	      : coolingIndex >= 70
+	      ? "#22c55e"
+	      : coolingIndex >= 45
+	      ? "#f97316"
+	      : "#ef4444";
 	  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
   const hasInputData =
   ndvi !== "" || humidity !== "" || windSpeed !== "" || buildingDensity !== "";
@@ -185,16 +264,8 @@ function App() {
 
   return (
   <div
+    className="app-shell"
     style={{
-      backgroundColor: "#030712",
-      // We add the map here as a background image
-      backgroundImage: `
-        linear-gradient(to bottom, rgba(3, 7, 18, 0.8), rgba(3, 7, 18, 0.95)),
-        url('https://upload.wikimedia.org/wikipedia/commons/f/f3/India_location_map.svg')
-      `,
-      backgroundSize: "contain",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
       minHeight: "100vh",
       padding: "24px",
       fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -203,6 +274,34 @@ function App() {
     }}
   >
     {isScanning && <div className="scanning-overlay"></div>}
+    <div className="cursor-dot"></div>
+    <div className="cursor-outline"></div>
+    <div className="thermal-backdrop" aria-hidden="true"></div>
+    <aside className="side-quick-nav" aria-label="Section quick navigation">
+      {[
+        { label: "Home", target: "home" },
+        { label: "Prediction", target: "prediction" },
+        { label: "Heatmap", target: "heatmap" },
+        { label: "Insights", target: "insights" },
+        { label: "About", target: "about" },
+      ].map((item) => (
+        <button
+          key={item.label}
+          className="quick-nav-dot"
+          type="button"
+          aria-label={item.label}
+          onClick={() => {
+            if (item.target === "home") {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              return;
+            }
+            document.getElementById(item.target)?.scrollIntoView({ behavior: "smooth" });
+          }}
+        >
+          <span className="quick-nav-label">{item.label}</span>
+        </button>
+      ))}
+    </aside>
 
     {/* ================= PAGE BACKGROUND WRAPPER ================= ^ */}
 
@@ -454,7 +553,6 @@ className="dock-hover"
       India Heat Index
     </div>
 
-
     <div style={{ ...hotspotStyle, top: "35%", left: "62%" }}></div>
 <div style={{ ...cityLabelStyle, top: "32%", left: "65%" }}>Delhi</div>
 
@@ -471,7 +569,7 @@ className="dock-hover"
       style={{
         position: "absolute",
         left: "28px",
-        bottom: "28px",
+        bottom: "10px",
         backgroundColor: "rgba(2,6,23,0.72)",
         border: "1px solid rgba(255,255,255,0.12)",
         borderRadius: "18px",
@@ -490,9 +588,9 @@ className="dock-hover"
 </section>
 {/* ================= DASHBOARD METRIC CARDS SECTION ================= */}
       <div
+  className="metric-grid"
   style={{
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
     gap: "16px",
     maxWidth: "1200px",
     margin: "40px auto 40px",
@@ -797,6 +895,98 @@ className="dock-hover"
             - {item}
             </div>
           ))}
+
+            <div
+              style={{
+                marginTop: "28px",
+                padding: "20px",
+                borderRadius: "16px",
+                background:
+                  "linear-gradient(135deg, rgba(14,165,233,0.12), rgba(34,197,94,0.08), rgba(249,115,22,0.08))",
+                border: "1px solid rgba(125,211,252,0.18)",
+                boxShadow: "0 16px 38px rgba(0,0,0,0.22)",
+                textAlign: "left",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: "16px",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  marginBottom: "16px",
+                }}
+              >
+                <div>
+                  <h3
+                    style={{
+                      margin: "0 0 8px",
+                      color: "#f8fafc",
+                      fontSize: "17px",
+                      fontFamily: "'Orbitron', sans-serif",
+                      letterSpacing: "0.8px",
+                    }}
+                  >
+                    Urban Cooling Decision Engine
+                  </h3>
+                  <p style={{ margin: 0, color: "#94a3b8", fontSize: "13px", lineHeight: "1.6" }}>
+                    Converts model output into city-specific cooling actions for planners.
+                  </p>
+                </div>
+
+                <span
+                  style={{
+                    color: coolingEngineColor,
+                    backgroundColor: "rgba(2,6,23,0.48)",
+                    border: `1px solid ${coolingEngineColor}55`,
+                    borderRadius: "999px",
+                    padding: "8px 12px",
+                    fontSize: "11px",
+                    fontWeight: "800",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.65px",
+                  }}
+                >
+                  {coolingEngineMode}
+                </span>
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+                  gap: "12px",
+                }}
+              >
+                <div style={{ padding: "14px", borderRadius: "12px", backgroundColor: "rgba(2,6,23,0.42)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  <div style={{ color: "#94a3b8", fontSize: "11px", fontWeight: "800", letterSpacing: "0.8px", textTransform: "uppercase" }}>
+                    Cooling Score
+                  </div>
+                  <strong style={{ display: "block", marginTop: "8px", color: "#86efac", fontSize: "26px" }}>
+                    {coolingIndex !== null ? coolingIndex : "--"}
+                  </strong>
+                </div>
+
+                <div style={{ padding: "14px", borderRadius: "12px", backgroundColor: "rgba(2,6,23,0.42)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  <div style={{ color: "#94a3b8", fontSize: "11px", fontWeight: "800", letterSpacing: "0.8px", textTransform: "uppercase" }}>
+                    Priority Zones
+                  </div>
+                  <strong style={{ display: "block", marginTop: "8px", color: "#fdba74", fontSize: "26px" }}>
+                    {thresholdCount}
+                  </strong>
+                </div>
+
+                <div style={{ padding: "14px", borderRadius: "12px", backgroundColor: "rgba(2,6,23,0.42)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  <div style={{ color: "#94a3b8", fontSize: "11px", fontWeight: "800", letterSpacing: "0.8px", textTransform: "uppercase" }}>
+                    Strategy Focus
+                  </div>
+                  <strong style={{ display: "block", marginTop: "8px", color: "#bae6fd", fontSize: "14px", lineHeight: "1.45" }}>
+                    {recommendations[0] || "Run a prediction to generate action guidance"}
+                  </strong>
+                </div>
+              </div>
+            </div>
         </div>
       )}
     </div>
@@ -965,7 +1155,7 @@ className="dock-hover"
           Place Heat Search
         </h3>
 	        <p style={{ margin: 0, color: "#94a3b8", fontSize: "14px", lineHeight: "1.6" }}>
-	          Search {city} zones and hover the blue map pins for place names without cluttering the heat layer.
+	          Search {city} zones, filter hotter regions, and hover the blue map pins for temperature and zone category.
 	        </p>
       </div>
 
@@ -984,6 +1174,81 @@ className="dock-hover"
           Hottest match: {hottestVisiblePlace.name} - {hottestVisiblePlace.temperature.toFixed(1)}°C
         </div>
       )}
+    </div>
+
+    <div
+      style={{
+        marginBottom: "18px",
+        padding: "16px",
+        borderRadius: "14px",
+        background:
+          "linear-gradient(135deg, rgba(249,115,22,0.12), rgba(34,197,94,0.08))",
+        border: "1px solid rgba(255,255,255,0.1)",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: "14px",
+          alignItems: "center",
+          flexWrap: "wrap",
+          marginBottom: "12px",
+        }}
+      >
+        <div>
+          <strong
+            style={{
+              color: "#f8fafc",
+              fontSize: "14px",
+              fontFamily: "'Orbitron', sans-serif",
+              letterSpacing: "0.55px",
+            }}
+          >
+            Heat Threshold Control
+          </strong>
+          <p style={{ margin: "6px 0 0", color: "#94a3b8", fontSize: "13px" }}>
+            Showing regions at or above the selected temperature.
+          </p>
+        </div>
+        <div
+          style={{
+            color: "#fed7aa",
+            fontWeight: "800",
+            fontSize: "13px",
+            padding: "8px 12px",
+            borderRadius: "999px",
+            backgroundColor: "rgba(249,115,22,0.14)",
+            border: "1px solid rgba(249,115,22,0.24)",
+          }}
+        >
+          {thresholdCount} zones {">="} {heatThreshold}°C
+        </div>
+      </div>
+      <input
+        className="heat-threshold-slider"
+        type="range"
+        min="35"
+        max="45"
+        step="0.5"
+        value={heatThreshold}
+        onChange={(event) => setHeatThreshold(Number(event.target.value))}
+        style={{ width: "100%" }}
+      />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          color: "#64748b",
+          fontSize: "11px",
+          fontWeight: "700",
+          marginTop: "8px",
+        }}
+      >
+        <span>35°C</span>
+        <span>40°C</span>
+        <span>45°C</span>
+      </div>
     </div>
 
     <input
@@ -1289,7 +1554,7 @@ className="dock-hover"
           fontSize: "14px",
         }}
       >
-        <span>Powered by Team HeatShield</span>
+        <span>Powered by Team 404 Brain Not Found</span>
         <span>Built for ISRO Hackathon 2026 • Urban Heat Mitigation</span>
       </footer>
     </div>
