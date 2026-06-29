@@ -473,14 +473,14 @@ input {
   background-image:
     linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0)) !important;
   box-shadow:
-    0 16px 38px rgba(0, 0, 0, 0.24),
+    0 12px 28px rgba(0, 0, 0, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .card-hover:hover {
   box-shadow:
-    0 20px 48px rgba(0, 0, 0, 0.3),
-    0 0 34px rgba(251, 146, 60, 0.14),
+    0 16px 36px rgba(0, 0, 0, 0.28),
+    0 0 24px rgba(251, 146, 60, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
@@ -1194,7 +1194,7 @@ input {
 }
 
 .float-hero {
-  animation: floatHero 5s ease-in-out infinite;
+  animation: floatHero 8s ease-in-out infinite;
 }
 
 .fade-up {
