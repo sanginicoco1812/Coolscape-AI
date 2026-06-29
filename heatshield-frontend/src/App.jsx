@@ -375,9 +375,9 @@ function App() {
         <div className="breaking-news-card">
           <div className="breaking-news-kicker">
             <span className="breaking-news-pulse"></span>
-            Project Update
+            Breaking News
           </div>
-          <h2>HeatShield India Dashboard Is Live</h2>
+          <h2>ISRO Hackathon Mission Console Activated</h2>
           <p>
             HEATSHIELD INDIA is now visualizing Landsat 8/9 April-June 2025 satellite samples for urban heat intelligence across Indian cities.
           </p>
@@ -432,7 +432,7 @@ function App() {
         {[...Array(2)].map((_, loopIndex) => (
           <div className="top-marquee-content" key={loopIndex} aria-hidden={loopIndex === 1}>
             <span>ISRO Hackathon 2026</span>
-            <strong>HEATSHIELD INDIA dashboard is live</strong>
+            <strong>HEATSHIELD INDIA mission console is live</strong>
             <span>Landsat 8/9 Apr-Jun 2025 NDVI + LST exported</span>
             <strong>Urban cooling intelligence for Delhi, Mumbai, Hyderabad, Bengaluru</strong>
             <span>Team 404 Brain Not Found</span>
@@ -577,7 +577,7 @@ className="dock-hover"
     fontFamily: "'Orbitron', sans-serif",
   }}
 >
-  Urban Heat Planning Tool
+  AI Climate Analytics Engine
 </p>
 
 <h1
@@ -594,7 +594,7 @@ className="dock-hover"
     textAlign: "center"
   }}
 >
-  Urban Heat Risk Dashboard
+  Physics-Informed Urban Thermal Analysis
 </h1>
 
 <p
@@ -609,7 +609,7 @@ className="dock-hover"
     textAlign: "center"
   }}
 >
-  Use satellite-derived surface indicators and local weather inputs to estimate heat risk and compare cooling priorities across Indian cities.
+  Synthesizing satellite Earth-observation telemetry, relative humidity configurations, and surface friction indices to map real-time microclimate anomalies.
 </p>
 
     <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center" }}>
@@ -630,7 +630,7 @@ className="dock-hover"
       transition: "transform 0.2s ease, opacity 0.2s ease",
     }}
   >
-    Run Heat Assessment
+    LAUNCH CONSOLE SIMULATOR
   </button>
 
   <button
@@ -649,7 +649,7 @@ className="dock-hover"
       transition: "background 0.2s ease",
     }}
   >
-    View Heat Maps
+    VIEW RADIATIVE MAPS
   </button>
 </div>
   </div>
@@ -784,10 +784,10 @@ className="dock-hover"
     <span style={{ fontSize: "11px", color: "#64748b" }}>0-100 cooling resilience score</span>
   </div>
 
-  {/* CARD 6: MODEL CONFIDENCE */}
+  {/* CARD 6: AI CONFIDENCE */}
   <div className="card-hover animate-card" style={{
      backgroundColor: "rgba(15, 23, 42, 0.4)", border: "1px solid rgba(249, 115, 22, 0.18)", padding: "24px", borderRadius: "12px", position: "relative" }}>
-    <h3 style={{ margin: "0 0 4px 0", fontSize: "12px", color: "#94a3b8", letterSpacing: "1px", textTransform: "uppercase" }}>Model Confidence</h3>
+    <h3 style={{ margin: "0 0 4px 0", fontSize: "12px", color: "#94a3b8", letterSpacing: "1px", textTransform: "uppercase" }}>AI Confidence</h3>
     <p style={{ fontSize: "36px", fontWeight: "700", margin: "6px 0", color: confidence !== null ? "#fdba74" : "#475569" }}>
       {confidence !== null ? `${confidence}%` : "--"}
     </p>
@@ -813,7 +813,7 @@ className="dock-hover"
   <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
     <span style={{ width: "8px", height: "8px", backgroundColor: "#f97316", borderRadius: "50%" }}></span>
     <h2 style={{ color: "#f8fafc", margin: 0, fontSize: "18px", fontFamily: "'Orbitron', sans-serif", letterSpacing: "0.5px" }}>
-      Heat Risk Assessment
+      Predictive Engine Control Panel
     </h2>
   </div>
 
@@ -931,7 +931,7 @@ className="dock-hover"
             boxShadow: "0 4px 20px rgba(249, 115, 22, 0.2)",
           }}
         >
-          {isScanning ? "Checking heat inputs..." : "Generate Heat Risk"}
+          {isScanning ? "SCANNING THERMAL DATA..." : "EXECUTE PREDICTIVE SIMULATION"}
         </button>
 
         {temperature !== null && (
@@ -946,7 +946,7 @@ className="dock-hover"
             }}
           >
             <h4 style={{ margin: "0 0 6px 0", fontSize: "11px", color: "#f43f5e", letterSpacing: "1px", fontFamily: "'Orbitron', sans-serif" }}>
-              Assessment Complete
+              SIMULATION MATRIX COMPLETE
             </h4>
             <div style={{ fontSize: "42px", fontWeight: "800", color: "#fda4af", margin: "4px 0" }}>
               {temperature}°C
@@ -965,7 +965,7 @@ className="dock-hover"
                 marginBottom: "20px",
               }}
             >
-              Result: {riskLevel} heat risk
+              SYSTEM STATE STATS: {riskLevel} RISK CORRIDOR
             </div>
 
             {predictionMode && (
@@ -1006,7 +1006,7 @@ className="dock-hover"
 
               <div style={{ backgroundColor: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.2)", borderRadius: "8px", padding: "14px" }}>
                 <h3 style={{ margin: "0 0 8px", color: "#fdba74", fontSize: "12px", letterSpacing: "1px", fontFamily: "'Orbitron', sans-serif" }}>
-                  Model Confidence
+                  AI Confidence Score
                 </h3>
                 <strong style={{ color: "#f8fafc", fontSize: "28px" }}>{confidence !== null ? `${confidence}%` : "--"}</strong>
               </div>
@@ -1025,7 +1025,7 @@ className="dock-hover"
                 marginBottom: "12px",
               }}
               >
-                Heat Drivers
+                AI Heat Analysis
               </h3>
               {aiFactors.map((factor, index) => (
               <div
@@ -1094,7 +1094,7 @@ className="dock-hover"
                       letterSpacing: "0.8px",
                     }}
                   >
-                    Urban Cooling Plan
+                    Urban Cooling Decision Engine
                   </h3>
                   <p style={{ margin: 0, color: "#94a3b8", fontSize: "13px", lineHeight: "1.6" }}>
                     Converts model output into city-specific cooling actions for planners.
@@ -1176,7 +1176,7 @@ className="dock-hover"
   <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "32px" }}>
     <span style={{ width: "10px", height: "10px", backgroundColor: "#22c55e", borderRadius: "50%", boxShadow: "0 0 12px #22c55e" }}></span>
     <h2 style={{ color: "#f8fafc", margin: 0, fontSize: "20px", fontFamily: "'Orbitron', sans-serif", letterSpacing: "0.75px" }}>
-      Model Input Weights
+      Neural Weights & Feature Attribution Matrix
     </h2>
   </div>
 
@@ -1409,10 +1409,10 @@ className="dock-hover"
   {/* TITLE AREA */}
   <div style={{ marginBottom: "50px" }}>
     <h2 style={{ color: "#f8fafc", margin: "0 0 12px 0", fontSize: "28px", fontFamily: "'Orbitron', sans-serif", letterSpacing: "1px" }}>
-      Urban Heat Spectrum
+      SURFACE RADIATIVE SPECTRUM CORRIDOR
     </h2>
     <p style={{ color: "#94a3b8", fontSize: "16px", maxWidth: "600px" }}>
-      A quick view of how the current inputs sit between cooler green zones and high-retention built-up areas.
+      Continuous thermodynamic tracking of surface friction and albedo feedback loops across the urban canopy.
     </p>
   </div>
   <h3
@@ -1703,7 +1703,7 @@ className="dock-hover"
       </div>
 
       <div className="spectrum-marker spectrum-marker-hot" style={{ position: "absolute", left: "85%", top: "-20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <span style={{ fontSize: "12px", fontFamily: "'Orbitron', sans-serif", fontWeight: "700", color: "#fca5a5", marginBottom: "8px" }}>HIGH HEAT ZONE</span>
+        <span style={{ fontSize: "12px", fontFamily: "'Orbitron', sans-serif", fontWeight: "700", color: "#fca5a5", marginBottom: "8px" }}>CRITICAL THERMAL ANOMALY</span>
         <div style={{ width: "3px", height: "80px", backgroundColor: "#fca5a5", opacity: 1, boxShadow: "0 0 12px #ef4444" }}></div>
       </div>
     </div>
@@ -1767,7 +1767,7 @@ className="dock-hover"
       <div style={{ color: "#94a3b8", fontSize: "14px", lineHeight: "1.6" }}>Suburban transitional zones requiring minor thermal mitigation.</div>
     </div>
     <div>
-      <div style={{ color: "#ef4444", fontWeight: "800", fontSize: "18px", marginBottom: "8px" }}>Built-up Hotspots</div>
+      <div style={{ color: "#ef4444", fontWeight: "800", fontSize: "18px", marginBottom: "8px" }}>Albedo Core Hotspots</div>
       <div style={{ color: "#94a3b8", fontSize: "14px", lineHeight: "1.6" }}>High built-density areas exhibiting significant heat retention.</div>
     </div>
   </div>
@@ -1859,7 +1859,7 @@ className="dock-hover"
       textTransform: "uppercase",
     }}
   >
-    Project Aim
+    System Intelligence & Mission Objective
   </h2>
 
   <p
@@ -1871,7 +1871,7 @@ className="dock-hover"
       margin: 0,
     }}
   >
-    HeatShield India is a geospatial decision-support dashboard built for the 2026 Bharatiya Antariksh Hackathon. It combines satellite-derived vegetation and land surface temperature indicators with local weather and built-density inputs to highlight urban heat risk. The goal is to help planners compare hotspots, prioritize tree cover, cool roofs, ventilation corridors, and other practical cooling actions.
+    HeatShield India is an advanced geospatial analytics framework developed for the 2026 Bharatiya Antariksh Hackathon. By synthesizing multi-source satellite telemetry with urban surface friction metrics, the system identifies microclimate anomalies to guide urban heat mitigation strategies. Our objective is to assist policymakers in optimizing green cover expansion, reducing high-albedo material impact, and restoring natural ventilation corridors to ensure long-term thermal resilience in urban centers.
   </p>
 </div>
 
@@ -1944,8 +1944,8 @@ styleSheet.innerText = `
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes pulseHotspot { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
   .animate-card { animation: fadeIn 0.6s ease-out forwards; }
-  .card-hover { transition: transform 0.24s ease, border-color 0.24s ease; }
-  .card-hover:hover { transform: translateY(-2px); border-color: rgba(249, 115, 22, 0.28); }
+  .card-hover { transition: transform 0.3s ease; }
+  .card-hover:hover { transform: translateY(-5px); border-color: rgba(249, 115, 22, 0.4); }
   .scanning-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(transparent, rgba(249, 115, 22, 0.1), transparent); animation: scan-move 2s linear infinite; pointer-events: none; z-index: 100; }
   @keyframes scan-move { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
     .bar-fill-animate {
