@@ -22,12 +22,14 @@ MODEL_DIR = BASE_DIR / "model_artifacts"
 if not MODEL_DIR.exists():
     MODEL_DIR = BASE_DIR.parent / "models"
 
-models = {
-    "Delhi": joblib.load(MODEL_DIR / "real_temperature_model_v3.pkl"),
-    "Mumbai": joblib.load(MODEL_DIR / "mumbai_temperature_model.pkl"),
-    "Hyderabad": joblib.load(MODEL_DIR / "hyderabad_temperature_model.pkl"),
-    "Bengaluru": joblib.load(MODEL_DIR / "bengaluru_temperature_model.pkl"),
+MODEL_PATHS = {
+    "Delhi": MODEL_DIR / "real_temperature_model_v3.pkl",
+    "Mumbai": MODEL_DIR / "mumbai_temperature_model.pkl",
+    "Hyderabad": MODEL_DIR / "hyderabad_temperature_model.pkl",
+    "Bengaluru": MODEL_DIR / "bengaluru_temperature_model.pkl",
 }
+
+_loaded_models = {}
 
 CITY_RECOMMENDATIONS = {
     "Delhi": [
@@ -105,11 +107,26 @@ def calculate_confidence(data: PredictionInput) -> float:
     return round(clamp(94 - range_penalty - stress_penalty, 55, 98), 1)
 
 
+def get_model(city: str):
+    if city not in _loaded_models:
+        _loaded_models[city] = joblib.load(MODEL_PATHS[city])
+    return _loaded_models[city]
+
+
+@app.get("/")
+def health_check():
+    return {
+        "status": "success",
+        "service": "HeatShield India AI Backend",
+        "models": list(MODEL_PATHS.keys()),
+    }
+
+
 @app.post("/predict")
 def predict_temperature(data: PredictionInput):
     city = data.city
 
-    if city not in models:
+    if city not in MODEL_PATHS:
         return {
             "status": "error",
             "message": "Invalid city selected"
@@ -122,7 +139,7 @@ def predict_temperature(data: PredictionInput):
         data.buildingDensity,
     ]]
 
-    prediction = models[city].predict(model_input)[0]
+    prediction = get_model(city).predict(model_input)[0]
     predicted_temp = round(float(prediction), 2)
     risk = (
         "Extreme" if predicted_temp >= 45 else
