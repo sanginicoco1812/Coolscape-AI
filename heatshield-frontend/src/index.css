@@ -142,6 +142,8 @@ input {
   isolation: isolate;
   overflow: hidden;
   background:
+    linear-gradient(145deg, rgba(251, 146, 60, 0.055) 0 18%, transparent 18.2% 100%),
+    linear-gradient(28deg, transparent 0 58%, rgba(56, 189, 248, 0.055) 58.2% 100%),
     radial-gradient(circle at 12% 11%, rgba(251, 146, 60, 0.15), transparent 22%),
     radial-gradient(circle at 88% 13%, rgba(14, 165, 233, 0.14), transparent 26%),
     radial-gradient(ellipse at 50% 55%, rgba(30, 64, 175, 0.14), transparent 44%),
@@ -180,6 +182,11 @@ input {
     radial-gradient(ellipse at 50% 35%, transparent 0 38%, rgba(125, 211, 252, 0.035) 38.2% 38.5%, transparent 39%),
     linear-gradient(180deg, transparent 0%, rgba(2, 6, 23, 0.7) 82%);
   opacity: 0.92;
+}
+
+.app-shell::selection {
+  color: #020617;
+  background: #fed7aa;
 }
 
 .thermal-backdrop {
@@ -233,13 +240,47 @@ input {
 }
 
 .app-shell nav {
+  position: sticky;
+  top: 14px;
+  z-index: 40;
   border-radius: 18px !important;
   background:
-    linear-gradient(135deg, rgba(15, 23, 42, 0.74), rgba(2, 6, 23, 0.48)) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+    linear-gradient(135deg, rgba(15, 23, 42, 0.86), rgba(2, 6, 23, 0.62)) !important;
+  border-color: rgba(125, 211, 252, 0.15) !important;
   box-shadow:
     0 18px 50px rgba(0, 0, 0, 0.32),
-    0 0 36px rgba(249, 115, 22, 0.08) !important;
+    0 0 36px rgba(249, 115, 22, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.main-nav::before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.55), rgba(251, 146, 60, 0.46), transparent);
+  opacity: 0.82;
+  pointer-events: none;
+}
+
+.brand-mark {
+  text-shadow:
+    0 0 18px rgba(125, 211, 252, 0.22),
+    0 0 26px rgba(249, 115, 22, 0.12);
+}
+
+.nav-menu .dock-hover {
+  padding: 8px 10px;
+  border-radius: 999px;
+  color: #dbeafe;
+}
+
+.nav-menu .dock-hover:hover {
+  color: #fff7ed;
+  background: rgba(251, 146, 60, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(251, 146, 60, 0.16);
 }
 
 .app-shell button {
@@ -449,6 +490,69 @@ input {
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
 }
 
+.hero-section {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  width: min(540px, 72vw);
+  aspect-ratio: 1;
+  left: -10%;
+  top: 8%;
+  z-index: -1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 48% 48%, rgba(251, 146, 60, 0.12), transparent 32%),
+    conic-gradient(from 120deg, transparent 0 34deg, rgba(251, 146, 60, 0.22), transparent 72deg 360deg);
+  border: 1px solid rgba(251, 146, 60, 0.12);
+  filter: blur(0.1px);
+  opacity: 0.82;
+  animation: slowMissionSpin 26s linear infinite;
+}
+
+.hero-section::after {
+  content: "";
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: -18px;
+  z-index: -1;
+  height: 96px;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(14, 165, 233, 0.16), transparent 70%),
+    linear-gradient(90deg, transparent, rgba(125, 211, 252, 0.16), transparent);
+  filter: blur(18px);
+  opacity: 0.78;
+}
+
+.hero-copy {
+  position: relative;
+}
+
+.hero-copy::before {
+  content: "MISSION CONTROL";
+  position: absolute;
+  left: 0;
+  top: -26px;
+  color: rgba(125, 211, 252, 0.14);
+  font-family: "Orbitron", sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  pointer-events: none;
+}
+
+.hero-section h1 {
+  background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 42%, #fed7aa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  text-shadow: none !important;
+}
+
 .home-news-headline span {
   flex: 0 0 auto;
   padding: 5px 8px;
@@ -577,12 +681,43 @@ input {
     radial-gradient(circle at 80% 12%, rgba(125, 211, 252, 0.12), transparent 24%);
 }
 
+.float-hero::after {
+  content: "";
+  position: absolute;
+  inset: 26px;
+  border-radius: 999px;
+  border: 1px dashed rgba(187, 247, 208, 0.18);
+  box-shadow:
+    0 0 0 38px rgba(34, 197, 94, 0.022),
+    inset 0 0 28px rgba(125, 211, 252, 0.06);
+  pointer-events: none;
+  animation: slowMissionSpin 30s linear infinite reverse;
+}
+
 .metric-grid {
   gap: 20px !important;
 }
 
 .metric-grid > .card-hover {
   min-height: 156px;
+  overflow: hidden;
+}
+
+.metric-grid > .card-hover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(125, 211, 252, 0.14), transparent 38%),
+    radial-gradient(circle at 86% 14%, rgba(251, 146, 60, 0.12), transparent 24%);
+  opacity: 0;
+  transition: opacity 0.24s ease;
+}
+
+.metric-grid > .card-hover:hover::before {
+  opacity: 1;
 }
 
 #prediction,
@@ -595,6 +730,21 @@ input {
     0 24px 70px rgba(0, 0, 0, 0.34),
     inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
   backdrop-filter: blur(18px);
+  position: relative;
+  overflow: hidden;
+}
+
+#prediction::before,
+#insights::before,
+#heatmap::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 22px;
+  right: 22px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(251, 146, 60, 0.5), rgba(125, 211, 252, 0.34), transparent);
+  pointer-events: none;
 }
 
 #heatmap iframe {
@@ -761,6 +911,15 @@ input {
   }
 }
 
+@keyframes slowMissionSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @keyframes newsOverlayIn {
   from {
     opacity: 0;
@@ -797,6 +956,14 @@ input {
   border-radius: 12px !important;
   background-color: rgba(2, 6, 23, 0.62) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.app-shell input:focus,
+.app-shell select:focus {
+  border-color: rgba(125, 211, 252, 0.46) !important;
+  box-shadow:
+    0 0 0 3px rgba(14, 165, 233, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
 }
 
 .heat-threshold-slider {
