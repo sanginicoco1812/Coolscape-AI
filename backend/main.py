@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import joblib
-import pandas as pd
 from pydantic import BaseModel
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -116,14 +115,14 @@ def predict_temperature(data: PredictionInput):
             "message": "Invalid city selected"
         }
 
-    input_df = pd.DataFrame([{
-        "NDVI": data.ndvi,
-        "Humidity": data.humidity,
-        "WindSpeed": data.windSpeed,
-        "BuildingDensity": data.buildingDensity
-    }])
+    model_input = [[
+        data.ndvi,
+        data.humidity,
+        data.windSpeed,
+        data.buildingDensity,
+    ]]
 
-    prediction = models[city].predict(input_df)[0]
+    prediction = models[city].predict(model_input)[0]
     predicted_temp = round(float(prediction), 2)
     risk = (
         "Extreme" if predicted_temp >= 45 else

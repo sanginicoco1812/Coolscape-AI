@@ -1,7 +1,6 @@
 fastapi
 a2wsgi
 joblib
-pandas
 scikit-learn
 numpy
 pydantic
