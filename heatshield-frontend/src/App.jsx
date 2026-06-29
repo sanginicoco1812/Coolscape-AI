@@ -443,6 +443,7 @@ function App() {
 
     {/* ================= NAVBAR SECTION ================= */}
   <nav
+  className="main-nav"
   style={{
     maxWidth: "1200px",
     margin: "0 auto 40px",
@@ -481,6 +482,7 @@ function App() {
     `}
   </style>
   <div
+  className="brand-mark"
   style={{
     fontSize: "15px",
     fontWeight: "800",
@@ -493,6 +495,7 @@ function App() {
 </div>
 
   <div
+    className="nav-menu"
     style={{
       display: "flex",
       gap: "24px",
@@ -547,6 +550,7 @@ className="dock-hover"
   </nav>
 {/* ================= HERO SECTION ================= */}
       <section
+  className="hero-section"
   style={{
     maxWidth: "1180px",
     margin: "0 auto 56px",
@@ -557,7 +561,7 @@ className="dock-hover"
   }}
 >
   
-  <div>
+  <div className="hero-copy">
     <div className="home-news-headline">
       <span>ISRO Hackathon 2026</span>
       <strong>Satellite-powered urban heat risk dashboard for climate-resilient Indian cities</strong>
@@ -814,6 +818,7 @@ className="dock-hover"
   </div>
 
         <div
+          className="prediction-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
@@ -1177,7 +1182,7 @@ className="dock-hover"
 
   <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
     {/* NDVI */}
-    <div style={{ display: "grid", gridTemplateColumns: "180px 1fr 60px", alignItems: "center", gap: "20px" }}>
+    <div className="insight-row" style={{ display: "grid", gridTemplateColumns: "180px 1fr 60px", alignItems: "center", gap: "20px" }}>
       <span style={{ color: "#94a3b8", fontWeight: "700", fontSize: "14px", textAlign: "left" }}>NDVI Telemetry</span>
       <div style={{ height: "16px", backgroundColor: "rgba(255, 255, 255, 0.03)", borderRadius: "6px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)", padding: "2px" }}>
         <div className="bar-fill-animate" style={{ height: "100%", width: `${featureWeights.ndvi}%`, backgroundColor: "#22c55e", borderRadius: "4px", boxShadow: "0 0 10px rgba(34, 197, 94, 0.5)" }}></div>
@@ -1186,7 +1191,7 @@ className="dock-hover"
     </div>
 
     {/* HUMIDITY */}
-    <div style={{ display: "grid", gridTemplateColumns: "180px 1fr 60px", alignItems: "center", gap: "20px" }}>
+    <div className="insight-row" style={{ display: "grid", gridTemplateColumns: "180px 1fr 60px", alignItems: "center", gap: "20px" }}>
       <span style={{ color: "#94a3b8", fontWeight: "700", fontSize: "14px", textAlign: "left" }}>Air Moisture</span>
       <div style={{ height: "16px", backgroundColor: "rgba(255, 255, 255, 0.03)", borderRadius: "6px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)", padding: "2px" }}>
         <div className="bar-fill-animate" style={{ height: "100%", width: `${featureWeights.humidity}%`, backgroundColor: "#3b82f6", borderRadius: "4px", boxShadow: "0 0 10px rgba(59, 130, 246, 0.5)" }}></div>
@@ -1195,7 +1200,7 @@ className="dock-hover"
     </div>
 
     {/* WIND SPEED */}
-    <div style={{ display: "grid", gridTemplateColumns: "180px 1fr 60px", alignItems: "center", gap: "20px" }}>
+    <div className="insight-row" style={{ display: "grid", gridTemplateColumns: "180px 1fr 60px", alignItems: "center", gap: "20px" }}>
       <span style={{ color: "#94a3b8", fontWeight: "700", fontSize: "14px", textAlign: "left" }}>Wind Velocity</span>
       <div style={{ height: "16px", backgroundColor: "rgba(255, 255, 255, 0.03)", borderRadius: "6px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)", padding: "2px" }}>
         <div className="bar-fill-animate" style={{ height: "100%", width: `${featureWeights.wind}%`, backgroundColor: "#a855f7", borderRadius: "4px", boxShadow: "0 0 10px rgba(168, 85, 247, 0.5)" }}></div>
@@ -1204,7 +1209,7 @@ className="dock-hover"
     </div>
 
     {/* BUILDING DENSITY */}
-    <div style={{ display: "grid", gridTemplateColumns: "180px 1fr 60px", alignItems: "center", gap: "20px" }}>
+    <div className="insight-row" style={{ display: "grid", gridTemplateColumns: "180px 1fr 60px", alignItems: "center", gap: "20px" }}>
       <span style={{ color: "#94a3b8", fontWeight: "700", fontSize: "14px", textAlign: "left" }}>Urban Canopy</span>
       <div style={{ height: "16px", backgroundColor: "rgba(255, 255, 255, 0.03)", borderRadius: "6px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)", padding: "2px" }}>
         <div  className="bar-fill-animate" style={{ height: "100%", width: `${featureWeights.density}%`, backgroundColor: "#fb7185", borderRadius: "4px", boxShadow: "0 0 10px rgba(251, 113, 113, 0.5)" }}></div>
@@ -1423,7 +1428,7 @@ className="dock-hover"
   {city} Urban Heatmap
   </h3>
 
-		  <div style={{ marginTop: "30px", marginBottom: "48px" }}>
+		  <div className="heatmap-frame-wrap" style={{ marginTop: "30px", marginBottom: "48px" }}>
 	    {heatmapFiles[city].type === "image" ? (
 	      <img
        src={heatmapFiles[city].src}
@@ -1463,6 +1468,7 @@ className="dock-hover"
     }}
   >
     <div
+      className="place-grid"
       style={{
         display: "flex",
         justifyContent: "space-between",
@@ -1674,7 +1680,7 @@ className="dock-hover"
     </div>
   </div>
 	  {/* THE EXPANDED THERMAL GRADIENT ENGINE */}
-	  <div style={{ position: "relative", padding: "40px 0 60px 0" }}>
+	  <div className="thermal-spectrum" style={{ position: "relative", padding: "40px 0 60px 0" }}>
     
     <div 
       style={{ 
@@ -1686,22 +1692,23 @@ className="dock-hover"
       }}
     >
       {/* INDICATORS - NOW SPACED FOR MAXIMUM IMPACT */}
-      <div style={{ position: "absolute", left: "15%", top: "-20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div className="spectrum-marker spectrum-marker-cool" style={{ position: "absolute", left: "15%", top: "-20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
         <span style={{ fontSize: "12px", fontFamily: "'Orbitron', sans-serif", fontWeight: "700", color: "#86efac", marginBottom: "8px" }}>ECOLOGICAL BUFFER</span>
         <div style={{ width: "3px", height: "80px", backgroundColor: "#86efac", opacity: 0.8 }}></div>
       </div>
 
-      <div style={{ position: "absolute", left: "52%", top: "-20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div className="spectrum-marker spectrum-marker-mid" style={{ position: "absolute", left: "52%", top: "-20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
         <span style={{ fontSize: "12px", fontFamily: "'Orbitron', sans-serif", fontWeight: "700", color: "#fde68a", marginBottom: "8px" }}>URBAN CHILL SECTOR</span>
         <div style={{ width: "3px", height: "80px", backgroundColor: "#fde68a", opacity: 0.8 }}></div>
       </div>
 
-      <div style={{ position: "absolute", left: "85%", top: "-20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div className="spectrum-marker spectrum-marker-hot" style={{ position: "absolute", left: "85%", top: "-20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
         <span style={{ fontSize: "12px", fontFamily: "'Orbitron', sans-serif", fontWeight: "700", color: "#fca5a5", marginBottom: "8px" }}>CRITICAL THERMAL ANOMALY</span>
         <div style={{ width: "3px", height: "80px", backgroundColor: "#fca5a5", opacity: 1, boxShadow: "0 0 12px #ef4444" }}></div>
       </div>
     </div>
     <div
+  className="active-spectrum-marker"
   style={{
     position: "absolute",
     left: `${thermalPosition}%`,
@@ -1750,7 +1757,7 @@ className="dock-hover"
   </div>
 
   {/* LOWER METRIC FOOTER - ENLARGED */}
-  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "40px", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "30px" }}>
+  <div className="spectrum-legend-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "40px", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "30px" }}>
     <div>
       <div style={{ color: "#22c55e", fontWeight: "800", fontSize: "18px", marginBottom: "8px" }}>Cool Green Zones</div>
       <div style={{ color: "#94a3b8", fontSize: "14px", lineHeight: "1.6" }}>High canopy density and active vegetation-based cooling corridors.</div>
