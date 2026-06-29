@@ -18,7 +18,10 @@ app.add_middleware(
 )
 
 BASE_DIR = Path(__file__).resolve().parent
-MODEL_DIR = BASE_DIR.parent / "models"
+MODEL_DIR = BASE_DIR / "model_artifacts"
+
+if not MODEL_DIR.exists():
+    MODEL_DIR = BASE_DIR.parent / "models"
 
 models = {
     "Delhi": joblib.load(MODEL_DIR / "real_temperature_model_v3.pkl"),
